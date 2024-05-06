@@ -1,3 +1,3 @@
 
-def snake_case():
+def hello_world():
     print('Hello World');
