@@ -1,15 +1,21 @@
 astroid==3.1.0
+blinker==1.8.2
 cached-property==1.5.2
 cfgv==3.4.0
+click==8.1.7
 colorama==0.4.6
 dill==0.3.8
 distlib==0.3.8
 filelock==3.14.0
+Flask==3.0.3
 greenlet==3.0.3
 identify==2.5.36
 inflection==0.5.1
 iniconfig==2.0.0
 isort==5.13.2
+itsdangerous==2.2.0
+Jinja2==3.1.4
+MarkupSafe==2.1.5
 mccabe==0.7.0
 mypy-extensions==1.0.0
 nodeenv==1.8.0
@@ -27,3 +33,4 @@ tomlkit==0.12.4
 typing-inspect==0.9.0
 typing_extensions==4.11.0
 virtualenv==20.26.1
+Werkzeug==3.0.3

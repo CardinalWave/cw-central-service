@@ -25,7 +25,6 @@ def test_register_first_name_error():
     repo = UsersRepositorySpy()
     user_register = UserRegister(repo)
 
-
     try:
         user_register.register(first_name, last_name, age)
     except Exception as exception:
