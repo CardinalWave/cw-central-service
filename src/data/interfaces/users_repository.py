@@ -1,11 +1,14 @@
 from typing import List
 from abc import ABC, abstractmethod
-from src.domain.models.users import Users
+from src.infra.db.entities.users import Users as UsersEntity
 
 class UsersRepositoryInterface(ABC):
 
     @abstractmethod
-    def insert_user(self, first_name: str, last_name: str, age: int) -> None:pass
+    def insert_user(self, token: str, email: str, username: str) -> None:pass
 
     @abstractmethod
-    def select_user(self, first_name: str) ->  List[Users]: pass
+    def select_email(self, email: str) ->  UsersEntity: pass
+
+    @abstractmethod
+    def select_username(self, username: str) ->  UsersEntity: pass

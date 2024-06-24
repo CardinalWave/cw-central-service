@@ -1,20 +1,20 @@
 from typing import List
-from src.domain.models.users import Users
+from src.domain.models.user import User
 
 class UsersRepositorySpy():
 
     def __init__(self) -> None:
         self.insert_user_attributes = {}
-        self.select_user_attributes = {}
+        self.select_user_attributes = {User(token="39721cd4-6f50-46c5-9d2a-10f9159b09ee", username='Lua', email='lua2@outlook.com')}
 
-    def insert_user(self, first_name: str, last_name: str, age: int) -> None:
-        self.insert_user_attributes["first_name"] = first_name
-        self.insert_user_attributes["last_name"] = last_name
-        self.insert_user_attributes["age"] = age
+    def insert_user(self, token: str, email: str, username: int) -> None:
+        self.insert_user_attributes["token"] = token
+        self.insert_user_attributes["email"] = email
+        self.insert_user_attributes["username"] = username
 
-    def select_user(self, first_name: str) -> List[Users]:
-        self.select_user_attributes["first_name"] = first_name
-        return [
-            Users(23, first_name, "last", 43),
-            Users(23, first_name, "last_2", 23)
-        ]
+    def select_user(self, email: str) -> User: 
+        for user in self.select_user_attributes:
+            if user.email == email:return user
+        return None
+                
+            

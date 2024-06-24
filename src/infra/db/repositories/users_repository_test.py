@@ -1,58 +1,56 @@
 import pytest
 from sqlalchemy import text
 from src.infra.db.settings.connection import DBConnectionHandler
-from .users_repository import UsersRepository
+from src.infra.db.repositories.users_repository import UsersRepository
 
 db_connection_handler = DBConnectionHandler()
 connection = db_connection_handler.get_engine().connect()
 
 @pytest.mark.skip(reason="sensive test")
 def test_insert_user():
-    mocked_first_name = 'first'
-    mocked_last_name = 'last'
-    mocked_age = 12
+    mocked_token = '39721cd4-6f50-46c5-9d2a-10f9159b09ee'
+    mocked_email = 'lua@outlook.com'
+    mocked_username = 'Lua'
 
     users_repository = UsersRepository()
-    users_repository.insert_user(mocked_first_name, mocked_last_name, mocked_age)
+    users_repository.insert_user(mocked_token, mocked_email, mocked_username)
 
     sql = '''SELECT * FROM users
-        WHERE first_name = '{}' 
-        AND last_name = '{}' 
-        AND age = '{}'
-    '''.format(mocked_first_name, mocked_last_name, mocked_age)
+        WHERE email = '{}' 
+    '''.format(mocked_email)
     response = connection.execute(text(sql))
     registry = response.fetchall()[0]
 
-    assert registry.first_name == mocked_first_name
-    assert registry.last_name == mocked_last_name
-    assert registry.age == mocked_age
+    assert registry.token == mocked_token
+    assert registry.email == mocked_email
+    assert registry.username == mocked_username
 
     connection.execute(text(f'''
-        DELETE FROM users WHERE id = {registry.id}                      
+        DELETE FROM users WHERE token = '{registry.token}';                      
     '''))
     connection.commit()
 
 @pytest.mark.skip(reason="sensive test")
 def test_select_user():
-    mocked_first_name = 'first_2'
-    mocked_last_name = 'last_2'
-    mocked_age = 12
+    mocked_token = '39721cd4-6f50-46c5-9d2a-10f9159b09aa'
+    mocked_email = 'lua2@outlook.com'
+    mocked_username = 'lua2'
 
     sql = '''INSERT INTO
-        users (first_name, last_name, age) 
+        users (token, email, username) 
         VALUES ('{}', '{}', '{}')
-    '''.format(mocked_first_name, mocked_last_name, mocked_age)
+    '''.format(mocked_token, mocked_email, mocked_username)
     connection.execute(text(sql))
     connection.commit()
 
     users_repository = UsersRepository()
-    response = users_repository.select_user(mocked_first_name)
+    response = users_repository.select_email(email=mocked_email)
 
-    assert response[0].first_name == mocked_first_name
-    assert response[0].last_name == mocked_last_name
-    assert response[0].age == mocked_age
+    assert response.token == mocked_token
+    assert response.email == mocked_email
+    assert response.username == mocked_username
 
     connection.execute(text(f'''
-        DELETE FROM users WHERE id = {response[0].id}                      
+        DELETE FROM users WHERE token = '{response.token}'                     
     '''))
     connection.commit()
