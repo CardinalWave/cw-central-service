@@ -11,23 +11,25 @@ class UserAuthenticator(UserAuthenticatorInterface):
     @classmethod
     def login(cls, login: Login) -> User:
         url = cls.cw_auth_service
-        request = cls._request_auth(params=login, url=url, action="login")
+        request = cls.__request_auth(params=login, url=url, action="login")
         return request
 
     @classmethod
     def register(cls, register: Register) -> User:
         url = cls.cw_auth_service
-        request = cls._request_auth(params=register.to_json(), url=url, action="regiter")
+        request = cls.__request_auth(params=register.to_json(), url=url, action="regiter")
         return request
-    
-    def _request_auth(params: any, url, action) -> User:
+
+    @staticmethod
+    def __request_auth(params: any, url, action) -> User:
         try:
             headers = {
                 'Content-type': 'application/json'
             }
 
             conn = http.client.HTTPConnection(url)
-            conn.request("POST", f"/user/"+action, params, headers)
+            route = "/user/"+action
+            conn.request("POST", route, params, headers)
             response = conn.getresponse()
             if response.status != 200:
                 raise ValueError("Request error")
@@ -36,7 +38,8 @@ class UserAuthenticator(UserAuthenticatorInterface):
             json_data = json.loads(data)
             conn.close()
 
-            return User(token=json_data['token'][0], username=json_data['username'], email=json_data['email'])
+            return User(token=json_data['token'][0],
+                        username=json_data['username'],
+                        email=json_data['email'])
         except Exception as error:
-            raise ValueError(f"Return error {error}")
-
+            raise ValueError(f"Return error {error}") from error

@@ -1,11 +1,6 @@
 from flask import Blueprint, request, jsonify
-
-# Import adapters
 from src.main.adapters.request_adapter import request_adapter
-
-# Import composers
 from src.main.composers.user_login_composer import user_login_composer
-from src.main.composers.user_register_composer import user_register_composer
 
 user_route_bp = Blueprint("user_routes", __name__)
 

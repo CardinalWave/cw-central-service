@@ -12,7 +12,7 @@ class UserLoginController(ControllerInterface):
     def handle(self, http_request: HttpRequest) -> HttpResponse:
         email = http_request.query_params["email"]
         password = http_request.query_params["password"]
-        
+
         login = Login(email=email, password=password)
 
         response = self.__use_case.login(login)

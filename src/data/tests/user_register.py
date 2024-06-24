@@ -7,5 +7,7 @@ from src.domain.use_cases.user_resgister import UserRegister as UserRegisterInte
 class UserRegisterSpy(UserRegisterInterface):
 
     @classmethod
-    def register(self, register: Register) -> Dict:
-        return User(token="39721cd4-6f50-46c5-9d2a-10f9159b09ee", email=register.email, username=register.email).to_dict()
+    def register(cls, register: Register) -> Dict:
+        return User(token="39721cd4-6f50-46c5-9d2a-10f9159b09ee",
+                    email=register.email,
+                    username=register.email).to_dict()

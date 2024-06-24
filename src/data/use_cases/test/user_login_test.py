@@ -1,6 +1,6 @@
+#pylint: disable=redefined-outer-name
 import json
 import pytest
-from unittest.mock import patch, Mock
 from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.infra.db.tests.users_repository import UsersRepositorySpy
@@ -13,7 +13,8 @@ def mock_login():
 
 @pytest.fixture
 def mock_user():
-    return User(token="39721cd4-6f50-46c5-9d2a-10f9159b09ee", username='Lua', email='lua@outlook.com')
+    return User(token="39721cd4-6f50-46c5-9d2a-10f9159b09ee",
+                username='Lua', email='lua@outlook.com')
 
 def test_login(mock_login, mock_user):
     users_auth = UserAuthenticatorSpy()
@@ -33,7 +34,7 @@ def test_login_error_email(mock_login):
 
     users_auth = UserAuthenticatorSpy()
     user_login = UserLogin(UsersRepositorySpy(), users_auth)
-    
+
     try:
         user_login.login(mock_login)
         assert False
@@ -57,7 +58,7 @@ def test_login_user_loged(mock_login):
 
     users_auth = UserAuthenticatorSpy()
     user_login = UserLogin(UsersRepositorySpy(), users_auth)
-    
+
     try:
         user_login.login(mock_login)
         assert False

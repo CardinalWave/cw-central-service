@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String
 from src.infra.db.settings.base import Base
 
 class Users(Base):

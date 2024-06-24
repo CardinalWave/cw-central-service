@@ -1,6 +1,3 @@
-import json
-import pytest
-from unittest.mock import patch, Mock
 from src.presentation.controllers.user_login_controller import UserLoginController
 from src.data.tests.user_login import UserLoginSpy
 from src.presentation.http_types.http_response import HttpResponse

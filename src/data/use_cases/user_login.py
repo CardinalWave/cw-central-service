@@ -1,4 +1,5 @@
-from typing import Dict, List
+#pylint: disable=broad-exception-raised
+from typing import Dict
 from src.domain.use_cases.user_login import UserLogin as UserLoginInterface
 from src.data.interfaces.users_repository import UsersRepositoryInterface
 from src.domain.use_cases.user_authenticator import UserAuthenticatorInterface
@@ -6,10 +7,12 @@ from src.domain.models.user import User
 from src.domain.models.login import Login
 
 class UserLogin(UserLoginInterface):
-    def __init__(self, users_repository: UsersRepositoryInterface, user_authenticator: UserAuthenticatorInterface) -> None:
+    def __init__(self, users_repository: UsersRepositoryInterface,
+                user_authenticator: UserAuthenticatorInterface) -> None:
+
         self.__users_repository = users_repository
         self.__user_authenticator = user_authenticator
-    
+
     def login(self, login: Login) -> Dict:
         self.__validate_email(login.email)
         self.__validate_password(login.password)

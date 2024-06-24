@@ -17,7 +17,7 @@ class UserRegister(UserRegisterInterface):
         auth = self.__authentication(register=register)
         response = self.__format_response(user=auth)
         return response
-    
+
     @staticmethod
     def __validate_username(username: str) -> None:
         if not username.isalpha():

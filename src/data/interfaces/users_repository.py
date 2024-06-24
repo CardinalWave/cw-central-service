@@ -1,4 +1,3 @@
-from typing import List
 from abc import ABC, abstractmethod
 from src.infra.db.entities.users import Users as UsersEntity
 
