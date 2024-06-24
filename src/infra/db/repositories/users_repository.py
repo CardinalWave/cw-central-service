@@ -1,6 +1,6 @@
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.entities.users import Users as UsersEntity
-from src.data.interfaces.users_repository import UsersRepositoryInterface
+from src.infra.db.interfaces.users_repository import UsersRepositoryInterface
 
 class UsersRepository(UsersRepositoryInterface):
 

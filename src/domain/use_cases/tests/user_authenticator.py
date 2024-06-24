@@ -2,7 +2,7 @@ from typing import List
 from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.domain.models.register import Register
-from src.domain.use_cases.user_authenticator import UserAuthenticatorInterface
+from src.domain.use_cases.user_authenticator import UserAuthenticator as UserAuthenticatorInterface
 
 
 class UserAuthenticatorSpy(UserAuthenticatorInterface):

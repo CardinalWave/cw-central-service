@@ -3,7 +3,7 @@ from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.domain.models.register import Register
 
-class UserAuthenticatorInterface(ABC):
+class UserAuthenticator(ABC):
 
     @abstractmethod
     def login(self, login: Login) -> User: pass
