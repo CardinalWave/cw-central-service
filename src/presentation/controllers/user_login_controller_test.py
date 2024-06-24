@@ -1,15 +1,18 @@
-from src.presentation.controllers.user_finder_controller import UserFinderController
-from src.data.tests.user_finder import UserFinderSpy
+import json
+import pytest
+from unittest.mock import patch, Mock
+from src.presentation.controllers.user_login_controller import UserLoginController
+from src.data.tests.user_login import UserLoginSpy
 from src.presentation.http_types.http_response import HttpResponse
 
 class HttpRequestMock():
     def __init__(self) -> None:
-        self.query_params = { "first_name": "okTest" }
+        self.query_params = { "email": "lua@outlook.com", "password": "lu@Pelud@" }
 
 def test_handle():
     http_request_mock = HttpRequestMock()
-    use_case = UserFinderSpy()
-    user_finder_controller = UserFinderController(use_case)
+    use_case = UserLoginSpy()
+    user_finder_controller = UserLoginController(use_case)
 
     response = user_finder_controller.handle(http_request_mock)
 
