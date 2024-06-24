@@ -1,41 +1,44 @@
 #pylint: disable=broad-exception-raised
 from typing import Dict
 from src.domain.use_cases.user_resgister import UserRegister as UserRegisterInterface
-from src.data.interfaces.users_repository import UsersRepositoryInterface
+from src.data.use_cases.user_authenticator import UserAuthenticatorInterface
+from src.domain.models.register import Register
+from src.domain.models.user import User
 
 class UserRegister(UserRegisterInterface):
 
-    def __init__(self, user_repository: UsersRepositoryInterface) -> None:
-        self.__user_repository = user_repository
+    def __init__(self, user_authenticator: UserAuthenticatorInterface) -> None:
+        self.__user_authenticator = user_authenticator
 
-    def register(self, first_name: str, last_name: str, age: int) -> Dict:
-        self.__validate_name(first_name)
-        self.__validate_name(last_name)
-
-        self.__registry_user_informations(first_name, last_name, age)
-        response = self.__format_response(first_name, last_name, age)
+    def register(self, register: Register) -> Dict:
+        self.__validate_username(register.username)
+        self.__validate_email(register.email)
+        self.__validate_password(register.password)
+        auth = self.__authentication(register=register)
+        response = self.__format_response(user=auth)
         return response
-
-    @classmethod
-    def __validate_name(cls, first_name: str) -> None:
-        if not first_name.isalpha():
+    
+    @staticmethod
+    def __validate_username(username: str) -> None:
+        if not username.isalpha():
             raise Exception('Nome invalido para o registro')
 
-        if len(first_name) > 20:
+        if len(username) > 20:
             raise Exception('Nome muito grande para o registro')
 
-    def __registry_user_informations(self, first_name: str, last_name: str, age: int) -> None:
-        self.__user_repository.insert_user(first_name, last_name, age)
+    @staticmethod
+    def __validate_email(email: str) -> None:
+        if not "@" in email:
+            raise Exception('Email ou senha invalido')
 
-    @classmethod
-    def __format_response(cls, first_name: str, last_name: str, age: int) -> Dict:
-        response = {
-            "type" : "Users",
-            "count": 1,
-            "attributes": {
-                "first_name": first_name,
-                "last_name": last_name,
-                "age": age
-            }
-        }
-        return response
+    @staticmethod
+    def __validate_password(password: str) -> None:
+        if len(password) > 20:
+            raise Exception('Senha invalida')
+
+    def __authentication(self, register: Register) -> User:
+        return self.__user_authenticator.register(register)
+
+    @staticmethod
+    def __format_response(user: User) -> Dict:
+        return user.to_json()
