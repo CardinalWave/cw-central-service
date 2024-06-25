@@ -1,6 +1,6 @@
 #pylint: disable=line-too-long
 from flask import Flask
-from src.main.routes.routes import user_route_bp
+from src.main.routes.user_routes import user_route_bp
 from src.data.erros.handlers import handle_bad_request, handle_not_found, handle_internal_server_error
 from src.data.erros.domain_errors import BadRequestError, NotFoundError, InternalServerError
 

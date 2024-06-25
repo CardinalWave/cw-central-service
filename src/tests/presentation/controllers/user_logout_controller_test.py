@@ -1,5 +1,5 @@
 from src.presentation.controllers.user_logout_controller import UserLogoutController
-from src.data.tests.user_logout import UserLogoutSpy
+from src.tests.data.mocks.user_logout import UserLogoutSpy
 from src.presentation.http_types.http_response import HttpResponse
 
 

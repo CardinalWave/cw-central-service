@@ -2,8 +2,8 @@
 import pytest
 from src.domain.models.user import User
 from src.domain.models.login import Login
-from src.infra.db.tests.users_repository import UsersRepositorySpy
-from src.data.tests.user_authenticator import UserAuthenticatorSpy
+from src.tests.infra.mocks.users_repository import UsersRepositorySpy
+from src.tests.data.mocks.user_authenticator import UserAuthenticatorSpy
 from src.data.use_cases.user_login import UserLogin
 
 @pytest.fixture

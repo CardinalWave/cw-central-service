@@ -2,8 +2,8 @@
 from unittest.mock import MagicMock
 import pytest
 from src.domain.models.user import User
-from src.data.tests.user_authenticator import UserAuthenticatorSpy
-from src.infra.db.tests.users_repository import UsersRepositorySpy
+from src.tests.data.mocks.user_authenticator import UserAuthenticatorSpy
+from src.tests.infra.mocks.users_repository import UsersRepositorySpy
 from src.data.use_cases.user_logout import UserLogout
 
 @pytest.fixture

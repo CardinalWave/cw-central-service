@@ -1,5 +1,5 @@
 from src.presentation.controllers.user_register_controller import UserRegisterController
-from src.data.tests.user_register import UserRegisterSpy
+from src.tests.data.mocks.user_register import UserRegisterSpy
 from src.presentation.http_types.http_response import HttpResponse
 
 class HttpRequestMock():
