@@ -6,15 +6,15 @@ from src.domain.use_cases.user_authenticator import UserAuthenticator as UserAut
 class UserLogout(UserLogoutInterface):
     def __init__(self, users_repository: UsersRepositoryInterface,
                 user_authenticator: UserAuthenticatorInterface) -> None:
-
         self.__users_repository = users_repository
         self.__user_authenticator = user_authenticator
 
-    def logout(self, user: User):
-        self.__authentication(user=user)
-        self.__logout_repo(user)
+    @classmethod
+    def logout(cls, user: User) -> None:
+        cls.__authentication(user=user)
+        cls.__logout_repo(user)
 
-    def __authentication(self, user: User) -> User:
+    def __authentication(self, user: User) -> None:
         self.__user_authenticator.logout(user)
 
     def __logout_repo(self, user: User) -> None:

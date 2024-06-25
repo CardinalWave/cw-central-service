@@ -17,10 +17,24 @@ class main.composers.user_login_composer {
   controller = UserLoginController()
   return: controller.handle
 }
-main.composers.user_login_composer ---> data.use_cases.user_authenticator.UserAuthenticator
-main.composers.user_login_composer ---> infra.db.repositories.users_repository.UsersRepository
-main.composers.user_login_composer ---> presentation.controllers.user_login_controller.UserLoginController
-main.composers.user_login_composer ---> data.use_cases.user_login.UserLogin
+
+main.composers.user_login_composer --> data.use_cases.user_login.UserLogin
+data.use_cases.user_login.UserLogin --> data.use_cases.user_authenticator.UserAuthenticator
+data.use_cases.user_login.UserLogin --> infra.db.repositories.users_repository.UsersRepository
+data.use_cases.user_login.UserLogin ----> presentation.controllers.user_login_controller.UserLoginController
+
+class main.composers.user_logout_composer {
+  auth = UserAuthenticator()
+  repository = UsersRepository()
+  use_case = UserLogout()
+  controller = UserLogoutController()
+  return: controller.handle
+}
+
+main.composers.user_logout_composer --> data.use_cases.user_logout.UserLogout
+data.use_cases.user_logout.UserLogout --> data.use_cases.user_authenticator.UserAuthenticator
+data.use_cases.user_logout.UserLogout --> infra.db.repositories.users_repository.UsersRepository
+data.use_cases.user_logout.UserLogout ----> presentation.controllers.user_logout_controller.UserLogoutController
 
 
 class data.use_cases.user_authenticator.UserAuthenticator {
@@ -50,6 +64,11 @@ class presentation.controllers.user_login_controller.UserLoginController {
   +handle(http_request: HttpRequest):HttpResponse
 }
 
+class presentation.controllers.user_logout_controller.UserLogoutController {
+  +__init__(use_case: UserLoginInterface)
+  +handle(http_request: HttpRequest):HttpResponse
+}
+
 class main.composers.user_register_composer{
   auth = UserAuthenticator()
   repository = UsersRepository()
@@ -64,9 +83,9 @@ class presentation.controllers.user_register_controller.UserRegisterController {
   +handle(http_request: HttpRequest):HttpResponse
 }
 
-main.composers.user_register_composer ---> data.use_cases.user_authenticator.UserAuthenticator
-main.composers.user_register_composer ---> data.use_cases.user_register.UserRegister
-main.composers.user_register_composer ---> presentation.controllers.user_register_controller.UserRegisterController
+main.composers.user_register_composer --> data.use_cases.user_register.UserRegister
+data.use_cases.user_register.UserRegister --> data.use_cases.user_authenticator.UserAuthenticator
+data.use_cases.user_register.UserRegister ---> presentation.controllers.user_register_controller.UserRegisterController
 
 class main.adapters.request_adapter{
   return: http_response
@@ -76,8 +95,10 @@ interface presentation.interface.controller_interface {
   +handle(http_request: HttpRequest): HttpResponse
 }
 
-presentation.interface.controller_interface <|-- presentation.controllers.user_register_controller.UserRegisterController
 presentation.interface.controller_interface <|-- presentation.controllers.user_login_controller.UserLoginController
+presentation.interface.controller_interface <|-- presentation.controllers.user_logout_controller.UserLogoutController
+presentation.interface.controller_interface <|-- presentation.controllers.user_register_controller.UserRegisterController
+
 
 class data.use_cases.user_login.UserLogin {
   +__init__(users_repository: UsersRepositoryInterface, user_authenticator: UserAuthenticatorInterface)
@@ -89,13 +110,24 @@ class data.use_cases.user_login.UserLogin {
   -__format_response(user: User): Dict
 }
 
-
 interface domain.use_cases.user_login.UserLoginInterface {
   +login(self, login: Login): User
 }
 
 domain.use_cases.user_login.UserLoginInterface <|-- data.use_cases.user_login.UserLogin
 
+class data.use_cases.user_logout.UserLogout {
+  +__init__(users_repository: UsersRepositoryInterface, user_authenticator: UserAuthenticatorInterface)
+  +logout(self, user: User): None
+  -__authentication(self, user: User): None
+  -__logout_repo(self, user: User): None
+}
+
+interface domain.use_cases.user_logout.UserLogoutInterface {
+  +logout(self, user: User): None
+}
+
+domain.use_cases.user_logout.UserLogoutInterface <|-- data.use_cases.user_logout.UserLogout
 
 class data.use_cases.user_register.UserRegister {
   +__init__(user_authenticator: UserAuthenticatorInterface)
