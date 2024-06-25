@@ -2,7 +2,7 @@ from src.domain.models.user import User
 from src.domain.use_cases.user_logout import UserLogout as UserLogoutInterface
 from src.infra.db.interfaces.users_repository import UsersRepositoryInterface
 from src.domain.use_cases.user_authenticator import UserAuthenticator as UserAuthenticatorInterface
-from src.data.erros.domain_errors import BadRequestError, InternalServerError
+from src.data.erros.domain_errors import BadRequestError
 
 class UserLogout(UserLogoutInterface):
     def __init__(self, users_repository: UsersRepositoryInterface,
@@ -16,9 +16,9 @@ class UserLogout(UserLogoutInterface):
             self.__authentication(user=user)
             self.__logout_repo(user)
             return "success"
-        except BadRequestError as e:
+        except BadRequestError:
             return "failed"
-        except Exception as e:
+        except Exception:
             return "failed"
 
     def __authentication(self, user: User) -> None:

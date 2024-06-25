@@ -4,7 +4,7 @@ from src.domain.use_cases.user_authenticator import UserAuthenticator as UserAut
 from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.domain.models.register import Register
-from src.data.erros.domain_errors import BadRequestError, InternalServerError, NotFoundError
+from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
 
 class UserAuthenticator(UserAuthenticatorInterface):
@@ -12,21 +12,21 @@ class UserAuthenticator(UserAuthenticatorInterface):
 
     @classmethod
     def login(cls, login: Login) -> User:
-        try: 
+        try:
             url = cls.cw_auth_service
             request = cls.__request_auth(params=login, url=url, action="login")
             return request
         except Exception as e:
-            raise BadRequestError(e)
+            raise BadRequestError(e) from e
 
     @classmethod
     def register(cls, register: Register) -> User:
-        try: 
+        try:
             url = cls.cw_auth_service
             request = cls.__request_auth(params=register.to_json(), url=url, action="regiter")
             return request
         except Exception as e:
-            raise BadRequestError(e)
+            raise BadRequestError(e) from e
 
 
     @classmethod
@@ -36,7 +36,7 @@ class UserAuthenticator(UserAuthenticatorInterface):
             request = cls.__request_auth(params=user.to_json(), url=url, action="logout")
             return request
         except Exception as e:
-            raise BadRequestError(e)
+            raise BadRequestError(e) from e
 
     @staticmethod
     def __request_auth(params: any, url, action) -> User:
@@ -46,8 +46,9 @@ class UserAuthenticator(UserAuthenticatorInterface):
             }
 
             conn = http.client.HTTPConnection(url)
+            conn.sock.settimeout(10)
             route = "/user/"+action
-            conn.request("POST", route, params, headers, timeout=60)
+            conn.request("POST", route, params, headers)
             response = conn.getresponse()
             if response.status != 200:
                 raise ValueError("Request error")
@@ -60,4 +61,4 @@ class UserAuthenticator(UserAuthenticatorInterface):
                         username=json_data['username'],
                         email=json_data['email'])
         except Exception as e:
-            raise InternalServerError(str(e))
+            raise InternalServerError(str(e)) from e

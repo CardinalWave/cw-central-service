@@ -1,6 +1,7 @@
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.entities.users import Users as UsersEntity
 from src.infra.db.interfaces.users_repository import UsersRepositoryInterface
+from src.data.erros.domain_errors import InternalServerError
 
 class UsersRepository(UsersRepositoryInterface):
 
@@ -15,9 +16,9 @@ class UsersRepository(UsersRepositoryInterface):
                 )
                 database.session.add(new_registry)
                 database.session.commit()
-            except Exception as exception:
+            except Exception as e:
                 database.session.rollback()
-                raise exception
+                raise InternalServerError(str(e)) from e
 
     @classmethod
     def select_email(cls, email: str) -> UsersEntity:
@@ -30,9 +31,9 @@ class UsersRepository(UsersRepositoryInterface):
                         .first()
                 )
                 return user
-            except Exception as exception:
+            except Exception as e:
                 database.session.rollback()
-                raise exception
+                raise InternalServerError(str(e)) from e
 
     @classmethod
     def select_username(cls, username: str) -> UsersEntity:
@@ -45,9 +46,9 @@ class UsersRepository(UsersRepositoryInterface):
                         .first()
                 )
                 return user
-            except Exception as exception:
+            except Exception as e:
                 database.session.rollback()
-                raise exception
+                raise InternalServerError(str(e)) from e
 
     @classmethod
     def remove_user(cls, token: str) ->  UsersEntity:
@@ -63,6 +64,6 @@ class UsersRepository(UsersRepositoryInterface):
                     database.session.delete(user)
                     database.session.commit()
                 return user
-            except Exception as exception:
+            except Exception as e:
                 database.session.rollback()
-                raise exception
+                raise InternalServerError(str(e)) from e

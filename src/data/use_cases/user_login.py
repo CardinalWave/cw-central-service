@@ -25,9 +25,9 @@ class UserLogin(UserLoginInterface):
             response = self.__format_response(user=auth)
             return response
         except BadRequestError as e:
-               raise BadRequestError(str(e))
+            raise BadRequestError(str(e)) from e
         except Exception as e:
-            raise InternalServerError(str(e))
+            raise InternalServerError(str(e)) from e
 
     @staticmethod
     def __validate_email(email: str) -> None:
