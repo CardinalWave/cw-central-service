@@ -9,9 +9,9 @@ class HttpRequestMock():
 def test_handle():
     http_request_mock = HttpRequestMock()
     use_case = UserLoginSpy()
-    user_finder_controller = UserLoginController(use_case)
+    user_login_controller = UserLoginController(use_case)
 
-    response = user_finder_controller.handle(http_request_mock)
+    response = user_login_controller.handle(http_request_mock)
 
     assert isinstance(response, HttpResponse)
     assert response.status_code == 200

@@ -32,7 +32,7 @@ class UserLogin(UserLoginInterface):
             raise Exception('Email ou senha invalido')
 
     def __search_user(self, login: Login) -> None:
-        users = self.__users_repository.select_user(email=login.email)
+        users = self.__users_repository.select_email(email=login.email)
         if users:
             raise Exception('Usuario logado')
 

@@ -10,3 +10,6 @@ class UserAuthenticator(ABC):
 
     @abstractmethod
     def register(self, register: Register) -> User: pass
+
+    @abstractmethod
+    def logout(self, user: User) -> None: pass

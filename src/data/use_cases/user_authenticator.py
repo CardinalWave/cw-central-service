@@ -20,6 +20,12 @@ class UserAuthenticator(UserAuthenticatorInterface):
         request = cls.__request_auth(params=register.to_json(), url=url, action="regiter")
         return request
 
+    @classmethod
+    def logout(cls, user: User) -> User:
+        url = cls.cw_auth_service
+        request = cls.__request_auth(params=user.to_json(), url=url, action="logout")
+        return request
+
     @staticmethod
     def __request_auth(params: any, url, action) -> User:
         try:

@@ -11,3 +11,6 @@ class UsersRepositoryInterface(ABC):
 
     @abstractmethod
     def select_username(self, username: str) ->  UsersEntity: pass
+
+    @abstractmethod
+    def remove_user(self, token: str) ->  None: pass

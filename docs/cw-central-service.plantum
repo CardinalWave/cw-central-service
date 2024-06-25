@@ -51,6 +51,7 @@ class presentation.controllers.user_login_controller.UserLoginController {
 }
 
 class main.composers.user_register_composer{
+  auth = UserAuthenticator()
   repository = UsersRepository()
   use_case = UserRegister()
   controller = UserRegisterController()
