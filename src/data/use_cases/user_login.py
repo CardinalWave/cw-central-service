@@ -18,6 +18,7 @@ class UserLogin(UserLoginInterface):
         self.__validate_password(login.password)
         self.__search_user(login=login)
         auth = self.__authentication(login=login)
+        self.__save_login(user=auth)
         response = self.__format_response(user=auth)
         return response
 
@@ -39,6 +40,11 @@ class UserLogin(UserLoginInterface):
     def __authentication(self, login: Login) -> User:
         return self.__user_authenticator.login(login)
 
+    def __save_login(self, user: User) -> None:
+        self.__users_repository.insert_user(token=user.token,
+                                            email=user.email,
+                                            username=user.username)
+
     @staticmethod
     def __format_response(user: User) -> Dict:
-        return user.to_json()
+        return user.to_dict()

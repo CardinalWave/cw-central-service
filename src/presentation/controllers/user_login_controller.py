@@ -10,14 +10,12 @@ class UserLoginController(ControllerInterface):
         self.__use_case = use_case
 
     def handle(self, http_request: HttpRequest) -> HttpResponse:
-        email = http_request.query_params["email"]
-        password = http_request.query_params["password"]
-
+        email = http_request.body.get("email")
+        password = http_request.body.get('password')
         login = Login(email=email, password=password)
-
         response = self.__use_case.login(login)
 
         return HttpResponse(
             status_code=200,
-            body={ "data":response }
+            body={ "payload":response }
         )

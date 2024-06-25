@@ -1,5 +1,4 @@
 #pylint: disable=redefined-outer-name
-import json
 import pytest
 from src.domain.models.user import User
 from src.domain.models.login import Login
@@ -22,11 +21,11 @@ def test_login(mock_login, mock_user):
 
     response = user_login.login(mock_login)
 
-    json_response = json.loads(response)
+    # json_response = json.loads(response)
 
-    assert json_response["token"] == mock_user.token
-    assert json_response["email"] == mock_user.email
-    assert json_response["username"] == mock_user.username
+    assert response.get("token") == mock_user.token
+    assert response.get("email") == mock_user.email
+    assert response.get("username") == mock_user.username
 
 
 def test_login_error_email(mock_login):

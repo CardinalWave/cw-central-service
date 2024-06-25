@@ -4,7 +4,7 @@ from src.presentation.http_types.http_response import HttpResponse
 
 class HttpRequestMock():
     def __init__(self) -> None:
-        self.query_params = { "email": "lua@outlook.com", "password": "lu@Pelud@" }
+        self.body = { "email": "lua@outlook.com", "password": "lu@Pelud@" }
 
 def test_handle():
     http_request_mock = HttpRequestMock()
@@ -15,4 +15,4 @@ def test_handle():
 
     assert isinstance(response, HttpResponse)
     assert response.status_code == 200
-    assert response.body["data"] is not None
+    assert response.body["payload"] is not None

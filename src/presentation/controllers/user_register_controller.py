@@ -10,13 +10,13 @@ class UserRegisterController(ControllerInterface):
         self.__use_case = use_case
 
     def handle(self, http_request: HttpRequest) -> HttpResponse:
-        email = http_request.query_params["email"]
-        username = http_request.query_params["username"]
-        password = http_request.query_params["password"]
+        email = http_request.body.get("email")
+        username = http_request.body.get('username')
+        password = http_request.body.get('password')
         register = Register(email=email, username=username, password=password)
         response = self.__use_case.register(register)
 
         return HttpResponse(
             status_code=200,
-            body={ "data":response }
+            body={ "payload":response }
         )

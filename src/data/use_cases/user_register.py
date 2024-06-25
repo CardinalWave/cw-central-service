@@ -41,4 +41,4 @@ class UserRegister(UserRegisterInterface):
 
     @staticmethod
     def __format_response(user: User) -> Dict:
-        return user.to_json()
+        return user.to_dict()

@@ -10,13 +10,13 @@ class UserLogoutController(ControllerInterface):
         self.__use_case = use_case
 
     def handle(self, http_request: HttpRequest) -> HttpResponse:
-        token =  http_request.query_params["token"]
-        email = http_request.query_params["email"]
-        username = http_request.query_params["username"]
+        token = http_request.body.get('token')
+        email = http_request.body.get("email")
+        username = http_request.body.get('username')
         user = User(token=token, email=email, username=username)
         response = self.__use_case.logout(user)
 
         return HttpResponse(
             status_code=200,
-            body={"data":response}
+            body={ "payload":response }
         )
