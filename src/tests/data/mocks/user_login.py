@@ -1,5 +1,5 @@
 from typing import Dict
-from src.domain.use_cases.user_login import UserLogin as UserLoginInterface
+from src.domain.use_cases.users.user_login import UserLogin as UserLoginInterface
 from src.domain.models.login import Login
 from src.domain.models.user import User
 

@@ -4,7 +4,7 @@ import pytest
 from src.domain.models.user import User
 from src.tests.data.mocks.user_authenticator import UserAuthenticatorSpy
 from src.tests.infra.mocks.users_repository import UsersRepositorySpy
-from src.data.use_cases.user_logout import UserLogout
+from src.data.use_cases.users.user_logout import UserLogout
 
 @pytest.fixture
 def mock_user():

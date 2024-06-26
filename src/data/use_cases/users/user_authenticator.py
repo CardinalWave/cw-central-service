@@ -1,13 +1,13 @@
 import http.client
 import json
-from src.domain.use_cases.user_authenticator import UserAuthenticator as UserAuthenticatorInterface
+from src.domain.use_cases.users.user_authenticator import UserAuthenticator as UserAuthInterface
 from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.domain.models.register import Register
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
 
-class UserAuthenticator(UserAuthenticatorInterface):
+class UserAuthenticator(UserAuthInterface):
     cw_auth_service = ""
 
     @classmethod

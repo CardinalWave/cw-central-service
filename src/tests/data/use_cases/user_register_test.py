@@ -3,7 +3,7 @@ import pytest
 from src.domain.models.register import Register
 from src.domain.models.user import User
 from src.tests.data.mocks.user_authenticator import UserAuthenticatorSpy
-from src.data.use_cases.user_register import UserRegister
+from src.data.use_cases.users.user_register import UserRegister
 
 @pytest.fixture
 def mock_register():

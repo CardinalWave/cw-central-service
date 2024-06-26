@@ -1,8 +1,8 @@
 #pylint: disable=broad-exception-raised
 from typing import Dict
-from src.domain.use_cases.user_login import UserLogin as UserLoginInterface
+from src.domain.use_cases.users.user_login import UserLogin as UserLoginInterface
 from src.infra.db.interfaces.users_repository import UsersRepositoryInterface
-from src.domain.use_cases.user_authenticator import UserAuthenticator as UserAuthenticatorInterface
+from src.domain.use_cases.users.user_authenticator import UserAuthenticator as UserAuthInterface
 from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
@@ -10,8 +10,7 @@ from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
 class UserLogin(UserLoginInterface):
     def __init__(self, users_repository: UsersRepositoryInterface,
-                user_authenticator: UserAuthenticatorInterface) -> None:
-
+                user_authenticator: UserAuthInterface) -> None:
         self.__users_repository = users_repository
         self.__user_authenticator = user_authenticator
 

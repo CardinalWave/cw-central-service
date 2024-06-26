@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
 from src.main.adapters.request_adapter import request_adapter
-from src.main.composers.user_login_composer import user_login_composer
-from src.main.composers.user_register_composer import user_register_composer
-from src.main.composers.user_logout_composer import user_logout_composer
+from src.main.composers.user.user_login_composer import user_login_composer
+from src.main.composers.user.user_register_composer import user_register_composer
+from src.main.composers.user.user_logout_composer import user_logout_composer
 
 user_route_bp = Blueprint("user_routes", __name__)
 

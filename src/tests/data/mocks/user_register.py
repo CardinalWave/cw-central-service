@@ -1,7 +1,7 @@
 from typing import Dict
 from src.domain.models.user import User
 from src.domain.models.register import Register
-from src.domain.use_cases.user_resgister import UserRegister as UserRegisterInterface
+from src.domain.use_cases.users.user_resgister import UserRegister as UserRegisterInterface
 
 
 class UserRegisterSpy(UserRegisterInterface):

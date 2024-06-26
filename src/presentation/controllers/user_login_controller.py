@@ -1,5 +1,5 @@
 from src.presentation.interfaces.controller_interface import ControllerInterface
-from src.domain.use_cases.user_login import UserLogin as UserLoginInterface
+from src.domain.use_cases.users.user_login import UserLogin as UserLoginInterface
 from src.presentation.http_types.http_request import HttpRequest
 from src.presentation.http_types.http_response import HttpResponse
 from src.domain.models.login import Login

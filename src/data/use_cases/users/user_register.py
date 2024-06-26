@@ -1,14 +1,14 @@
 #pylint: disable=broad-exception-raised
 from typing import Dict
-from src.domain.use_cases.user_resgister import UserRegister as UserRegisterInterface
-from src.data.use_cases.user_authenticator import UserAuthenticator as UserAuthenticatorInterface
+from src.domain.use_cases.users.user_resgister import UserRegister as UserRegisterInterface
+from src.data.use_cases.users.user_authenticator import UserAuthenticator as UserAuthInterface
 from src.domain.models.register import Register
 from src.domain.models.user import User
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
 class UserRegister(UserRegisterInterface):
 
-    def __init__(self, user_authenticator: UserAuthenticatorInterface) -> None:
+    def __init__(self, user_authenticator: UserAuthInterface) -> None:
         self.__user_authenticator = user_authenticator
 
     def register(self, register: Register) -> Dict:

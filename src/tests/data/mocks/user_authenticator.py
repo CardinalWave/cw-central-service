@@ -1,10 +1,10 @@
 from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.domain.models.register import Register
-from src.domain.use_cases.user_authenticator import UserAuthenticator as UserAuthenticatorInterface
+from src.domain.use_cases.users.user_authenticator import UserAuthenticator as UserAuthInterface
 
 
-class UserAuthenticatorSpy(UserAuthenticatorInterface):
+class UserAuthenticatorSpy(UserAuthInterface):
 
     @classmethod
     def login(cls, login: Login) -> User:

@@ -2,7 +2,7 @@ from src.presentation.http_types.http_request import HttpRequest
 from src.presentation.http_types.http_response import HttpResponse
 from src.presentation.interfaces.controller_interface import ControllerInterface
 from src.domain.models.user import User
-from src.domain.use_cases.user_logout import UserLogout as UserLogoutInterface
+from src.domain.use_cases.users.user_logout import UserLogout as UserLogoutInterface
 
 class UserLogoutController(ControllerInterface):
 
