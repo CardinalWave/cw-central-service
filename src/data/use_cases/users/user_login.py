@@ -7,7 +7,6 @@ from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
-
 class UserLogin(UserLoginInterface):
     def __init__(self, users_repository: UsersRepositoryInterface,
                 user_authenticator: UserAuthInterface) -> None:
