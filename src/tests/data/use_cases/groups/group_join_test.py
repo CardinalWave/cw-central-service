@@ -1,5 +1,5 @@
+#pylint: disable=redefined-outer-name
 import pytest
-from typing import List
 from src.domain.models.user import User
 from src.domain.models.group import Group
 from src.infra.db.entities.groups import Groups as GroupEntity

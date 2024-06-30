@@ -1,3 +1,4 @@
+#pylint: disable=line-too-long
 import uuid
 import datetime as dt
 from typing import List, Dict
@@ -59,10 +60,15 @@ class UserGroup(UserGroupInteface):
         except Exception as e:
             raise InternalServerError(str(e)) from e
 
-    def update_relation(self, user: User, Group: Group) -> Dict:
+    def update_relation(self, user: User, group: Group) -> Dict:
         try:
+            datetime = dt.datetime.now()
             encrypt_email = self.__secure_email.encrypt_email(user.email)
-            users_groups_entity = self.__users_groups_repository.update_relation(encrypt_email)
+            users_groups_entity = self.__users_groups_repository.update_relation(
+                secure_email=encrypt_email,
+                group_id=group.group_id,
+                updated_at=datetime)
+
             users_groups = UsersGroups(id=users_groups_entity.id,
                                        secure_email=users_groups_entity.secure_email,
                                        group_title=users_groups_entity.group_title,

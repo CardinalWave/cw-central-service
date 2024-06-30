@@ -1,3 +1,4 @@
+#pylint: disable=redefined-builtin
 from src.infra.db.interfaces.groups_repository import GroupsRepositoryInterface
 from src.infra.db.entities.groups import Groups as GroupsEntity
 from src.infra.db.settings.connection import DBConnectionHandler
@@ -22,7 +23,7 @@ class GroupsRepository(GroupsRepositoryInterface):
                 raise InternalServerError(str(e)) from e
 
     @classmethod
-    def select_title(self, title: str) -> GroupsEntity:
+    def select_title(cls, title: str) -> GroupsEntity:
         with DBConnectionHandler() as database:
             try:
                 group_entity = (

@@ -1,5 +1,4 @@
 from src.data.use_cases.groups.group_list import GroupList
-from src.infra.security.implementations.secure_email import SecureEmail
 from src.presentation.controllers.groups.group_list_controller import GroupListController
 from src.main.composers.relations.user_group_composer import user_group_composer
 

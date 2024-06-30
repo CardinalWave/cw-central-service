@@ -9,7 +9,7 @@ class GroupListController(ControllerInterface):
 
     def __init__(self, use_case: GroupListInterface) -> None:
         self.__use_case = use_case
-    
+
     def handle(self, http_request: HttpRequest) -> HttpResponse:
         token = http_request.body.get("token")
         email = http_request.body.get("email")

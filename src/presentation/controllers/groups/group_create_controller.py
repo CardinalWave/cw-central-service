@@ -1,4 +1,3 @@
-import random
 from src.presentation.interfaces.controller_interface import ControllerInterface
 from src.domain.use_cases.groups.group_create import GroupCreate as GroupCreateInterface
 from src.domain.models.group import Group

@@ -1,7 +1,7 @@
-import pytest
-import uuid
-from sqlalchemy import text
 import datetime as dt
+import uuid
+import pytest
+from sqlalchemy import text
 from src.infra.db.repositories.relations.users_groups_repository import UsersGroupsRepository
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.security.implementations.secure_email import SecureEmail
@@ -11,7 +11,7 @@ connection = db_connection_handler.get_engine().connect()
 
 @pytest.mark.skip(reason="sensive test")
 def test_join_user():
-    mocked_id = str(uuid.uuid4()) 
+    mocked_id = str(uuid.uuid4())
     mocked_email = 'test@outlook.com'
 
     mocked_group_id = str(uuid.uuid4())
@@ -44,7 +44,7 @@ def test_join_user():
 
 @pytest.mark.skip(reason="sensive test")
 def test_select_user_relations():
-    mocked_id = str(uuid.uuid4()) 
+    mocked_id = str(uuid.uuid4())
     mocked_email = 'test@outlook.com'
 
     mocked_group_id = str(uuid.uuid4())
@@ -53,9 +53,8 @@ def test_select_user_relations():
 
     secure_email = SecureEmail()
     encrypted_email = secure_email.encrypt_email(email=mocked_email)
- 
-   
-    connection.execute(text('''INSERT INTO users_groups (id, secure_email, 
+
+    connection.execute(text('''INSERT INTO users_groups (id, secure_email,
     group_title, group_id, updated_at) VALUES ('{}', '{}', '{}', '{}', '{}')
     '''.format(mocked_id, encrypted_email, mocked_title, mocked_group_id, str(mocked_updated_at))))
     connection.commit()
@@ -75,7 +74,7 @@ def test_select_user_relations():
 
 @pytest.mark.skip(reason="sensive test")
 def test_select_group_relations():
-    mocked_id = str(uuid.uuid4()) 
+    mocked_id = str(uuid.uuid4())
     mocked_email = 'test@outlook.com'
 
     mocked_group_id = str(uuid.uuid4())
@@ -84,9 +83,8 @@ def test_select_group_relations():
 
     secure_email = SecureEmail()
     encrypted_email = secure_email.encrypt_email(email=mocked_email)
- 
-   
-    connection.execute(text('''INSERT INTO users_groups (id, secure_email, 
+
+    connection.execute(text('''INSERT INTO users_groups (id, secure_email,
     group_title, group_id, updated_at) VALUES ('{}', '{}', '{}', '{}', '{}')
     '''.format(mocked_id, encrypted_email, mocked_title, mocked_group_id, str(mocked_updated_at))))
     connection.commit()
@@ -116,7 +114,7 @@ def test_update_relation():
     secure_email = SecureEmail()
     encrypted_email = secure_email.encrypt_email(email=mocked_email)
 
-    connection.execute(text('''INSERT INTO users_groups (id, secure_email, 
+    connection.execute(text('''INSERT INTO users_groups (id, secure_email,
     group_title, group_id, updated_at) VALUES ('{}', '{}', '{}', '{}', '{}')
     '''.format(mocked_id, encrypted_email, mocked_title, mocked_group_id, str(mocked_updated_at))))
     connection.commit()
@@ -124,7 +122,9 @@ def test_update_relation():
     mocked_updated_now = dt.datetime(2024, 6, 30, 17, 56, 15, 766331)
 
     users_groups_repository = UsersGroupsRepository()
-    response = users_groups_repository.update_relation(secure_email=encrypted_email, group_id=mocked_group_id, updated_at=mocked_updated_now)
+    response = users_groups_repository.update_relation(secure_email=encrypted_email,
+                                                       group_id=mocked_group_id,
+                                                       updated_at=mocked_updated_now)
 
     assert response.secure_email == secure_email.encrypt_email("test@outlook.com")
     assert response.group_title == mocked_title

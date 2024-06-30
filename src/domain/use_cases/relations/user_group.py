@@ -15,4 +15,4 @@ class UserGroup(ABC):
     def select_group_relations(self, group_id: str) ->  List[User]: pass
 
     @abstractmethod
-    def update_relation(self, user: User, Group: Group) -> Dict: pass
+    def update_relation(self, user: User, group: Group) -> Dict: pass

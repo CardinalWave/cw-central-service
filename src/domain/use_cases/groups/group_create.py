@@ -5,4 +5,4 @@ from src.domain.models.group import Group
 class GroupCreate(ABC):
 
     @abstractmethod
-    def create(self, group: Group) -> Group: Dict
+    def create(self, group: Group) -> Dict: pass

@@ -1,5 +1,4 @@
 import configparser
-import os
 
 class Config:
     config = configparser.ConfigParser()

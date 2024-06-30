@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-from cryptography.fernet import Fernet
-
 
 class SecureEmailInterface(ABC):
 

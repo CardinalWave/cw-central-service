@@ -1,8 +1,6 @@
+#pylint: disable=redefined-builtin, too-many-arguments
 import datetime
 from typing import List
-from src.domain.models.users_groups import UsersGroups
-from src.infra.db.entities.groups import Groups as GroupsEntity
-from src.infra.db.entities.users import Users as UsersEntity
 from src.infra.db.entities.users_groups import UsersGroups as UsersGroupsEntity
 from src.infra.db.interfaces.users_groups_repository import UsersGroupsRepositoryInterface
 from src.infra.db.settings.connection import DBConnectionHandler
@@ -11,7 +9,12 @@ from src.data.erros.domain_errors import InternalServerError
 class UsersGroupsRepository(UsersGroupsRepositoryInterface):
 
     @classmethod
-    def join_user(self, id: str, secure_email, group_title: str, group_id: str, updated_at: datetime) -> UsersGroupsEntity:
+    def join_user(cls, id: str,
+                  secure_email,
+                  group_title: str,
+                  group_id: str,
+                  updated_at: datetime) -> UsersGroupsEntity:
+
         with DBConnectionHandler() as database:
             try:
                 new_registry = UsersGroupsEntity(
@@ -30,7 +33,7 @@ class UsersGroupsRepository(UsersGroupsRepositoryInterface):
 
     # Grupos do Usuario
     @classmethod
-    def select_user_relations(self, secure_email: str) -> List[UsersGroupsEntity]:
+    def select_user_relations(cls, secure_email: str) -> List[UsersGroupsEntity]:
         with DBConnectionHandler() as database:
             try:
                 entitys = (
@@ -44,9 +47,8 @@ class UsersGroupsRepository(UsersGroupsRepositoryInterface):
                 database.session.rollback()
                 raise InternalServerError(str(e)) from e
 
-    # Usuarios no Grupo
     @classmethod
-    def select_group_relations(self, group_id: str) -> List[UsersGroupsEntity]:
+    def select_group_relations(cls, group_id: str) -> List[UsersGroupsEntity]:
         with DBConnectionHandler() as database:
             try:
                 entitys = (
@@ -61,7 +63,11 @@ class UsersGroupsRepository(UsersGroupsRepositoryInterface):
                 raise InternalServerError(str(e)) from e
 
     @classmethod
-    def update_relation(self, secure_email: str, group_id: str, updated_at: datetime) -> UsersGroupsEntity:
+    def update_relation(cls,
+                        secure_email: str,
+                        group_id: str,
+                        updated_at: datetime) -> UsersGroupsEntity:
+
         with DBConnectionHandler() as database:
             try:
                 (
