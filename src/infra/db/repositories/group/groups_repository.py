@@ -6,15 +6,17 @@ from src.data.erros.domain_errors import InternalServerError
 class GroupsRepository(GroupsRepositoryInterface):
 
     @classmethod
-    def add_group(cls, id: str, title: str) -> None:
+    def add_group(cls, id: str, title: str) -> GroupsEntity:
         with DBConnectionHandler() as database:
-            try:
-                new_registry = GroupsEntity(
+            group_entity = GroupsEntity(
                     id=id,
                     title=title
                 )
+            try:
+                new_registry = group_entity
                 database.session.add(new_registry)
                 database.session.commit()
+                return group_entity
             except Exception as e:
                 database.session.rollback()
                 raise InternalServerError(str(e)) from e
@@ -23,13 +25,13 @@ class GroupsRepository(GroupsRepositoryInterface):
     def select_title(self, title: str) -> GroupsEntity:
         with DBConnectionHandler() as database:
             try:
-                user = (
+                group_entity = (
                     database.session
                         .query(GroupsEntity)
                         .filter(GroupsEntity.title == title)
                         .first()
                 )
-                return user
+                return group_entity
             except Exception as e:
                 database.session.rollback()
                 raise InternalServerError(str(e)) from e

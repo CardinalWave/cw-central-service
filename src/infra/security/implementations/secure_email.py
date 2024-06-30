@@ -1,18 +1,20 @@
-from cryptography.fernet import Fernet
-import base64
-from src.infra.security.interfaces.secure_email import SecureEmail as SecureEmailInterface
-from src.config.config import Config
+import hashlib
+from src.infra.security.interfaces.secure_email import SecureEmailInterface
+from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
 class SecureEmail(SecureEmailInterface):
     def __init__(self) -> None:
-        self.fernet = Fernet(Config.KEY)
+        pass
     
     def encrypt_email(self, email: str) -> str:
-        encrypted_email = self.fernet.encrypt(email.encode())
-        encrypted_email_b64 = base64.urlsafe_b64decode(encrypted_email).decode()
-        return encrypted_email_b64
-    
-    def decrypt_email(self, encrypted_email_b64: str) -> str:
-        encrypted_email = base64.urlsafe_b64decode(encrypted_email_b64.encode())
-        decrypted_email = self.fernet.decrypt(encrypted_email).decode()
-        return decrypted_email
+        try:
+            hash = hashlib.sha256()
+            hash.update(email.encode('utf-8'))
+            encrypted_email = hash.hexdigest()
+            print(f"Antes: {email}")
+            print(f"Depois: {encrypted_email}")
+            return encrypted_email
+        except BadRequestError as e:
+                raise BadRequestError(str(e)) from e
+        except Exception as e:
+            raise InternalServerError(str(e)) from e

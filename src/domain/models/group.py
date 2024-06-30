@@ -2,13 +2,13 @@
 import json
 
 class Group:
-    def __init__(self, id: str, title: str):
-        self.id = id
+    def __init__(self, group_id: str, title: str):
+        self.group_id = group_id
         self.title = title
 
     def to_dict(self):
         return {
-            "id": self.id,
+            "group_id": self.group_id,
             "title": self.title
         }
 

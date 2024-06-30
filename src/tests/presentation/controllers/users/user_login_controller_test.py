@@ -1,4 +1,4 @@
-from src.presentation.controllers.user_login_controller import UserLoginController
+from src.presentation.controllers.users.user_login_controller import UserLoginController
 from src.tests.data.mocks.user_login import UserLoginSpy
 from src.presentation.http_types.http_response import HttpResponse
 
