@@ -2,7 +2,7 @@
 from unittest.mock import MagicMock
 import pytest
 from src.domain.models.user import User
-from src.tests.data.mocks.user_authenticator import UserAuthenticatorSpy
+from src.tests.data.mocks.users.user_authenticator import UserAuthenticatorSpy
 from src.tests.infra.mocks.users_repository import UsersRepositorySpy
 from src.data.use_cases.users.user_logout import UserLogout
 

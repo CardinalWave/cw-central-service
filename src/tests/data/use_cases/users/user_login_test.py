@@ -3,7 +3,7 @@ import pytest
 from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.tests.infra.mocks.users_repository import UsersRepositorySpy
-from src.tests.data.mocks.user_authenticator import UserAuthenticatorSpy
+from src.tests.data.mocks.users.user_authenticator import UserAuthenticatorSpy
 from src.data.use_cases.users.user_login import UserLogin
 
 @pytest.fixture
@@ -20,8 +20,6 @@ def test_login(mock_login, mock_user):
     user_login = UserLogin(UsersRepositorySpy(), users_auth)
 
     response = user_login.login(mock_login)
-
-    # json_response = json.loads(response)
 
     assert response.get("token") == mock_user.token
     assert response.get("email") == mock_user.email

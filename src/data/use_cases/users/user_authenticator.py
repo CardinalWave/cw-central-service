@@ -6,7 +6,6 @@ from src.domain.models.login import Login
 from src.domain.models.register import Register
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
-
 class UserAuthenticator(UserAuthInterface):
     cw_auth_service = ""
 
@@ -27,7 +26,6 @@ class UserAuthenticator(UserAuthInterface):
             return request
         except Exception as e:
             raise BadRequestError(e) from e
-
 
     @classmethod
     def logout(cls, user: User) -> User:
