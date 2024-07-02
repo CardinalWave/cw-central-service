@@ -5,13 +5,14 @@ from src.domain.use_cases.groups.group_list import GroupList as GroupListInterfa
 from src.domain.use_cases.relations.user_group import UserGroup as UserGroupInterfaces
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
+
 class GroupList(GroupListInterface):
 
-    def __init__(self,users_groups: UserGroupInterfaces) -> None:
+    def __init__(self, users_groups: UserGroupInterfaces) -> None:
         self.__users_groups = users_groups
 
     def list(self, user: User) -> List[Group]:
-        try: 
+        try:
             groups_entitys = self.__users_groups.select_user_relations(user.email)
             groups = [Group(group_id=group.group_id, title=group.title).to_dict() for group in groups_entitys]
             return groups

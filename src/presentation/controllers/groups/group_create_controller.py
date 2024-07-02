@@ -4,6 +4,7 @@ from src.domain.models.group import Group
 from src.presentation.http_types.http_request import HttpRequest
 from src.presentation.http_types.http_response import HttpResponse
 
+
 class GroupCreateController(ControllerInterface):
 
     def __init__(self, use_case: GroupCreateInterface) -> None:
@@ -17,5 +18,5 @@ class GroupCreateController(ControllerInterface):
 
         return HttpResponse(
             status_code=200,
-            body={ "payload": response }
+            body={"payload": response}
         )

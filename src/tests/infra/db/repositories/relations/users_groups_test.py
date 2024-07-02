@@ -9,7 +9,7 @@ from src.infra.security.implementations.secure_email import SecureEmail
 db_connection_handler = DBConnectionHandler()
 connection = db_connection_handler.get_engine().connect()
 
-@pytest.mark.skip(reason="sensive test")
+# @pytest.mark.skip(reason="sensive test")
 def test_join_user():
     mocked_id = str(uuid.uuid4())
     mocked_email = 'test@outlook.com'

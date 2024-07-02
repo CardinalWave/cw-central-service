@@ -3,6 +3,7 @@ from src.infra.db.entities.users import Users as UsersEntity
 from src.infra.db.interfaces.users_repository import UsersRepositoryInterface
 from src.data.erros.domain_errors import InternalServerError
 
+
 class UsersRepository(UsersRepositoryInterface):
 
     @classmethod
@@ -26,9 +27,9 @@ class UsersRepository(UsersRepositoryInterface):
             try:
                 user = (
                     database.session
-                        .query(UsersEntity)
-                        .filter(UsersEntity.email == email)
-                        .first()
+                    .query(UsersEntity)
+                    .filter(UsersEntity.email == email)
+                    .first()
                 )
                 return user
             except Exception as e:
@@ -41,9 +42,9 @@ class UsersRepository(UsersRepositoryInterface):
             try:
                 user = (
                     database.session
-                        .query(UsersEntity)
-                        .filter(UsersEntity.username == username)
-                        .first()
+                    .query(UsersEntity)
+                    .filter(UsersEntity.username == username)
+                    .first()
                 )
                 return user
             except Exception as e:
@@ -51,19 +52,18 @@ class UsersRepository(UsersRepositoryInterface):
                 raise InternalServerError(str(e)) from e
 
     @classmethod
-    def remove_user(cls, token: str) ->  UsersEntity:
+    def remove_user(cls, token: str):
         with DBConnectionHandler() as database:
             try:
                 user = (
                     database.session
-                        .query(UsersEntity)
-                        .filter(UsersEntity.token == token)
-                        .first()
+                    .query(UsersEntity)
+                    .filter(UsersEntity.token == token)
+                    .first()
                 )
                 if user:
                     database.session.delete(user)
                     database.session.commit()
-                return user
             except Exception as e:
                 database.session.rollback()
                 raise InternalServerError(str(e)) from e

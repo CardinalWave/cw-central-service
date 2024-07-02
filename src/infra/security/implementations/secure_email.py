@@ -2,6 +2,7 @@ import hashlib
 from src.infra.security.interfaces.secure_email import SecureEmailInterface
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
+
 class SecureEmail(SecureEmailInterface):
     def __init__(self) -> None:
         pass

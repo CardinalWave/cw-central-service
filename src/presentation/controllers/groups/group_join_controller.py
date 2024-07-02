@@ -5,6 +5,7 @@ from src.domain.use_cases.groups.group_join import GroupJoin as GroupJoinInterfa
 from src.domain.models.user import User
 from src.domain.models.group import Group
 
+
 class GroupJoinController(ControllerInterface):
 
     def __init__(self, use_case: GroupJoinInterface) -> None:
@@ -23,5 +24,5 @@ class GroupJoinController(ControllerInterface):
 
         return HttpResponse(
             status_code=200,
-            body={ "payload":response }
+            body={"payload": response}
         )

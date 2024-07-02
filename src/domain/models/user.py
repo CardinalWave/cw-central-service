@@ -1,6 +1,7 @@
 #pylint: disable=redefined-builtin
 import json
 
+
 class User:
     def __init__(self, token: str, email: str, username: str) -> None:
         self.token = token

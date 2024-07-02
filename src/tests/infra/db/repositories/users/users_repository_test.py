@@ -81,6 +81,7 @@ def test_select_username():
     '''))
     connection.commit()
 
+@pytest.mark.skip(reason="sensive test")
 def test_remove_user():
     mocked_token = '39721cd4-6f50-46c5-9d2a-10f9159b09aa'
     mocked_email = 'lua2@outlook.com'

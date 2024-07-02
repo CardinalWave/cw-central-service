@@ -6,6 +6,7 @@ from src.infra.db.interfaces.users_groups_repository import UsersGroupsRepositor
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.data.erros.domain_errors import InternalServerError
 
+
 class UsersGroupsRepository(UsersGroupsRepositoryInterface):
 
     @classmethod
@@ -31,16 +32,15 @@ class UsersGroupsRepository(UsersGroupsRepositoryInterface):
                 database.session.rollback()
                 raise InternalServerError(str(e)) from e
 
-    # Grupos do Usuario
     @classmethod
     def select_user_relations(cls, secure_email: str) -> List[UsersGroupsEntity]:
         with DBConnectionHandler() as database:
             try:
                 entitys = (
                     database.session
-                        .query(UsersGroupsEntity)
-                        .filter(UsersGroupsEntity.secure_email == secure_email)
-                        .all()
+                    .query(UsersGroupsEntity)
+                    .filter(UsersGroupsEntity.secure_email == secure_email)
+                    .all()
                 )
                 return entitys
             except Exception as e:
@@ -53,9 +53,9 @@ class UsersGroupsRepository(UsersGroupsRepositoryInterface):
             try:
                 entitys = (
                     database.session
-                        .query(UsersGroupsEntity)
-                        .filter(UsersGroupsEntity.group_id == group_id)
-                        .all()
+                    .query(UsersGroupsEntity)
+                    .filter(UsersGroupsEntity.group_id == group_id)
+                    .all()
                 )
                 return entitys
             except Exception as e:
@@ -72,17 +72,17 @@ class UsersGroupsRepository(UsersGroupsRepositoryInterface):
             try:
                 (
                     database.session
-                        .query(UsersGroupsEntity)
-                        .filter(UsersGroupsEntity.secure_email == secure_email)
-                        .filter(UsersGroupsEntity.group_id == group_id)
-                        .update({"updated_at": updated_at})
+                    .query(UsersGroupsEntity)
+                    .filter(UsersGroupsEntity.secure_email == secure_email)
+                    .filter(UsersGroupsEntity.group_id == group_id)
+                    .update({"updated_at": updated_at})
                 )
                 entity = (
                     database.session
-                        .query(UsersGroupsEntity)
-                        .filter(UsersGroupsEntity.secure_email == secure_email)
-                        .filter(UsersGroupsEntity.group_id == group_id)
-                        .first()
+                    .query(UsersGroupsEntity)
+                    .filter(UsersGroupsEntity.secure_email == secure_email)
+                    .filter(UsersGroupsEntity.group_id == group_id)
+                    .first()
                 )
                 return entity
             except Exception as e:

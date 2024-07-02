@@ -1,6 +1,7 @@
 #pylint: disable=trailing-comma-tuple
 import json
 
+
 class Group:
     def __init__(self, group_id: str, title: str):
         self.group_id = group_id

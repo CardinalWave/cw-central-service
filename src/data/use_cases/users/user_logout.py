@@ -4,14 +4,15 @@ from src.infra.db.interfaces.users_repository import UsersRepositoryInterface
 from src.domain.use_cases.users.user_authenticator import UserAuthenticator as UserAuthInterface
 from src.data.erros.domain_errors import BadRequestError
 
+
 class UserLogout(UserLogoutInterface):
     def __init__(self, users_repository: UsersRepositoryInterface,
-                user_authenticator: UserAuthInterface) -> None:
+                 user_authenticator: UserAuthInterface) -> None:
 
         self.__users_repository = users_repository
         self.__user_authenticator = user_authenticator
 
-    def logout(self, user: User) -> None:
+    def logout(self, user: User) -> str:
         try:
             self.__authentication(user=user)
             self.__logout_repo(user)
