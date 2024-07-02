@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-06-28T23:27:16.795Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0" etag="w5M_A3xCxPUiTPaUQuqq" version="24.6.4" type="device">
+<mxfile host="drawio-plugin" modified="2024-07-01T15:22:38.954Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="lYaiJq8CuoP85LOTa1s7" version="22.1.22" type="embed">
   <diagram name="Page-1" id="2X0-96u4QmUKPSBAWyLH">
-    <mxGraphModel dx="2026" dy="785" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1146" dy="750" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -171,15 +171,6 @@
         </mxCell>
         <mxCell id="32kXzzwJd7g3Jw-vZ3aj-3" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;UserGroup - join_user(global)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1720" y="560" width="150" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="tB0URkTfH9vpO6nKRVfl-1" value="UsersGroup - select_user_relations" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="2130" y="260" width="340" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="tB0URkTfH9vpO6nKRVfl-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="tB0URkTfH9vpO6nKRVfl-2" target="tB0URkTfH9vpO6nKRVfl-1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="tB0URkTfH9vpO6nKRVfl-2" value="/group/list" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="2120" y="90" width="60" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
