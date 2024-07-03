@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from src.infra.db.entities.users import Users as UsersEntity
+from src.domain.models.user import User
 
 
 class UsersRepositoryInterface(ABC):
