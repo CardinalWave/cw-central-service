@@ -6,7 +6,7 @@ from src.domain.models.user import User
 class UsersRepositoryInterface(ABC):
 
     @abstractmethod
-    def insert_user(self, token: str, email: str, username: str) -> None: pass
+    def insert_user(self, token: str, email: str, username: str, device: str, session_id: str) -> None: pass
 
     @abstractmethod
     def select_email(self, email: str) -> UsersEntity: pass

@@ -6,14 +6,17 @@ from src.infra.db.repositories.users.users_repository import UsersRepository
 db_connection_handler = DBConnectionHandler()
 connection = db_connection_handler.get_engine().connect()
 
+
 @pytest.mark.skip(reason="sensive test")
 def test_insert_user():
     mocked_token = '39721cd4-6f50-46c5-9d2a-10f9159b09ee'
     mocked_email = 'lua@outlook.com'
     mocked_username = 'Lua'
+    mocked_device = "esp8266_01"
+    mocked_session_id = "session_badlands321301231231231"
 
     users_repository = UsersRepository()
-    users_repository.insert_user(mocked_token, mocked_email, mocked_username)
+    users_repository.insert_user(mocked_token, mocked_email, mocked_username, mocked_device, mocked_session_id)
 
     sql = '''SELECT * FROM users
         WHERE email = '{}' 
@@ -30,16 +33,19 @@ def test_insert_user():
     '''))
     connection.commit()
 
+
 @pytest.mark.skip(reason="sensive test")
 def test_select_email():
     mocked_token = '39721cd4-6f50-46c5-9d2a-10f9159b09aa'
     mocked_email = 'lua2@outlook.com'
     mocked_username = 'lua2'
+    mocked_device = "esp8266_01"
+    mocked_session_id = "session_badlands321301231231231"
 
     sql = '''INSERT INTO
-        users (token, email, username) 
-        VALUES ('{}', '{}', '{}')
-    '''.format(mocked_token, mocked_email, mocked_username)
+        users (token, email, username, device, session_id) 
+        VALUES ('{}', '{}', '{}', '{}', '{}')
+    '''.format(mocked_token, mocked_email, mocked_username, mocked_device, mocked_session_id)
     connection.execute(text(sql))
     connection.commit()
 
@@ -61,11 +67,13 @@ def test_select_username():
     mocked_token = '39721cd4-6f50-46c5-9d2a-10f9159b09aa'
     mocked_email = 'lua2@outlook.com'
     mocked_username = 'lua2'
+    mocked_device = "esp8266_01"
+    mocked_session_id = "session_badlands321301231231231"
 
     sql = '''INSERT INTO
-        users (token, email, username) 
-        VALUES ('{}', '{}', '{}')
-    '''.format(mocked_token, mocked_email, mocked_username)
+        users (token, email, username, device, session_id) 
+        VALUES ('{}', '{}', '{}', '{}', '{}')
+    '''.format(mocked_token, mocked_email, mocked_username, mocked_device, mocked_session_id)
     connection.execute(text(sql))
     connection.commit()
 
@@ -81,16 +89,19 @@ def test_select_username():
     '''))
     connection.commit()
 
+
 @pytest.mark.skip(reason="sensive test")
 def test_remove_user():
     mocked_token = '39721cd4-6f50-46c5-9d2a-10f9159b09aa'
     mocked_email = 'lua2@outlook.com'
     mocked_username = 'lua2'
+    mocked_device = "esp8266_01"
+    mocked_session_id = "session_badlands321301231231231"
 
     sql = '''INSERT INTO
-        users (token, email, username) 
-        VALUES ('{}', '{}', '{}')
-    '''.format(mocked_token, mocked_email, mocked_username)
+        users (token, email, username, device, session_id) 
+        VALUES ('{}', '{}', '{}', '{}', '{}')
+    '''.format(mocked_token, mocked_email, mocked_username, mocked_device, mocked_session_id)
     connection.execute(text(sql))
     connection.commit()
 

@@ -7,13 +7,15 @@ from src.data.erros.domain_errors import InternalServerError
 class UsersRepository(UsersRepositoryInterface):
 
     @classmethod
-    def insert_user(cls, token: str, email: str, username: str) -> None:
+    def insert_user(cls, token: str, email: str, username: str, device: str, session_id: str) -> None:
         with DBConnectionHandler() as database:
             try:
                 new_registry = UsersEntity(
                     token=token,
                     email=email,
-                    username=username
+                    username=username,
+                    device=device,
+                    session_id=session_id
                 )
                 database.session.add(new_registry)
                 database.session.commit()

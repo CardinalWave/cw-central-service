@@ -11,7 +11,7 @@ class DBConnectionHandler:
             'root',
             'localhost',
             '5432',
-            'cw_database'
+            'cw_central_db'
         )
 
         self.__engine = self.__create_database_engine()
