@@ -9,3 +9,6 @@ class GroupsRepositoryInterface(ABC):
 
     @abstractmethod
     def select_title(cls, title: str) -> GroupsEntity: pass
+
+    @abstractmethod
+    def select_group_id(cls, group_id: str) -> GroupsEntity: pass

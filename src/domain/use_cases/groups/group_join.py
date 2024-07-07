@@ -7,7 +7,5 @@ from src.domain.models.users_groups import UsersGroups
 class GroupJoin(ABC):
 
     @abstractmethod
-    def join(self, user: User, group: Group) -> UsersGroups: pass
+    def join(self, token: str, group: str) -> UsersGroups: pass
 
-    @abstractmethod
-    def join_global(self, user: User) -> UsersGroups: pass

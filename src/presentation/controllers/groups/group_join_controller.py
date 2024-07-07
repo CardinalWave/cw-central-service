@@ -13,14 +13,9 @@ class GroupJoinController(ControllerInterface):
 
     def handle(self, http_request: HttpRequest) -> HttpResponse:
         token = http_request.body.get("token")
-        email = http_request.body.get("email")
-        username = http_request.body.get("username")
-        user = User(token=token, email=email, username=username)
-        group_title = http_request.body.get("group_title")
         group_id = http_request.body.get("group_id")
-        group = Group(group_id=group_id, title=group_title)
 
-        response = self.__use_case.join(user, group)
+        response = self.__use_case.join(token, group_id)
 
         return HttpResponse(
             status_code=200,

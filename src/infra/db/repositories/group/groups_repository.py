@@ -36,3 +36,18 @@ class GroupsRepository(GroupsRepositoryInterface):
             except Exception as e:
                 database.session.rollback()
                 raise InternalServerError(str(e)) from e
+
+    @classmethod
+    def select_group_id(cls, group_id: str) -> GroupsEntity:
+        with DBConnectionHandler() as database:
+            try:
+                group = (
+                    database.session
+                    .query(GroupsEntity)
+                    .filter(GroupsEntity.id == group_id)
+                    .first()
+                )
+                return group
+            except Exception as e:
+                database.session.rollback()
+                raise InternalServerError(str(e)) from e

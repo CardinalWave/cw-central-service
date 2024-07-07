@@ -6,6 +6,7 @@ from src.infra.db.entities.groups import Groups as GroupEntity
 from src.data.use_cases.groups.group_join import GroupJoin
 from src.tests.data.mocks.relations.user_group import UserGroupSpy
 from src.tests.infra.mocks.groups_repository import GroupsRepositorySpy
+from src.tests.data.mocks.relations.validate import ValidateSpy
 
 @pytest.fixture
 def mock_user():
@@ -14,13 +15,15 @@ def mock_user():
 
 @pytest.fixture
 def mock_group():
-    return Group(group_id="sda-dasd-dasda", title="TestGroup")
+    return Group(group_id="dalsj-dlad-dasad", title="TestGroup")
 
 def test_join(mock_user, mock_group):
     groups_repository = GroupsRepositorySpy()
     users_groups = UserGroupSpy()
-    group_join = GroupJoin(group_repository=groups_repository, users_groups=users_groups)
-    response = group_join.join(mock_user, mock_group)
+    validate = ValidateSpy()
+    group_join = GroupJoin(group_repository=groups_repository, users_groups=users_groups, validate=validate)
+
+    response = group_join.join(mock_user.token, mock_group.group_id)
 
     assert response is not None
     assert response is not type(Group)
