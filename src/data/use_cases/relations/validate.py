@@ -30,7 +30,7 @@ class Validate(ValidateInterface):
 
     def group_id(self, group_id: str) -> Group:
         try:
-            group_entity = self.__group_repository.select_group_id(group_id)
+            group_entity = self.__group_repository.select_group_id(group_id=group_id)
             group = Group(group_id=group_entity.id, title=group_entity.title)
             return group
         except BadRequestError as e:
