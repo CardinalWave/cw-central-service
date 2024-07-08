@@ -1,5 +1,6 @@
 from src.domain.models.group import Group
 from src.domain.models.user import User
+from src.domain.models.session import Session
 from src.domain.use_cases.relations.validate import Validate as ValidateInterface
 from src.infra.db.interfaces.users_repository import UsersRepositoryInterface
 from src.infra.db.interfaces.groups_repository import GroupsRepositoryInterface
@@ -27,6 +28,16 @@ class Validate(ValidateInterface):
             return user
         except BadRequestError as e:
             raise BadRequestError(str(e)) from e
+
+    def user_session_token(self, token: str) -> tuple:
+        try:
+            user_entity = self.__user_repository.select_token(token)
+            user = User(token=user_entity.token, username=user_entity.username, email=user_entity.email)
+            session = Session(session_id=user_entity.session_id, device=user_entity.device)
+            return user, session
+        except BadRequestError as e:
+            raise BadRequestError(str(e)) from e
+
 
     def group_id(self, group_id: str) -> Group:
         try:
