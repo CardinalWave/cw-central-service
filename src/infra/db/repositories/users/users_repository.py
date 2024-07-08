@@ -54,7 +54,53 @@ class UsersRepository(UsersRepositoryInterface):
                 raise InternalServerError(str(e)) from e
 
     @classmethod
-    def remove_user(cls, token: str):
+    def select_session(cls, session_id: str) -> UsersEntity:
+        with DBConnectionHandler() as database:
+            try:
+                user = (
+                    database.session
+                    .query(UsersEntity)
+                    .filter(UsersEntity.session_id == session_id)
+                    .first()
+                )
+                return user
+            except Exception as e:
+                database.session.rollback()
+                raise InternalServerError(str(e)) from e
+
+    @classmethod
+    def select_device(cls, device: str) -> list[UsersEntity]:
+        with DBConnectionHandler() as database:
+            try:
+                user_list = (
+                    database.session
+                    .query(UsersEntity)
+                    .filter(UsersEntity.device == device)
+                    .all()
+                )
+                return user_list
+            except Exception as e:
+                database.session.rollback()
+                raise InternalServerError(str(e)) from e
+
+    @classmethod
+    def select_token(cls, token: str) -> UsersEntity:
+        with DBConnectionHandler() as database:
+            try:
+                user = (
+                    database.session
+                    .query(UsersEntity)
+                    .filter(UsersEntity.token == token)
+                    .first()
+                )
+
+                return user
+            except Exception as e:
+                database.session.rollback()
+                raise InternalServerError(str(e)) from e
+
+    @classmethod
+    def remove_user(cls, token: str) -> str:
         with DBConnectionHandler() as database:
             try:
                 user = (
@@ -66,6 +112,8 @@ class UsersRepository(UsersRepositoryInterface):
                 if user:
                     database.session.delete(user)
                     database.session.commit()
+                    return "success"
             except Exception as e:
                 database.session.rollback()
                 raise InternalServerError(str(e)) from e
+            return "error"
