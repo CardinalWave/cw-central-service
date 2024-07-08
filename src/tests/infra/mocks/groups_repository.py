@@ -10,7 +10,14 @@ class GroupsRepositorySpy(GroupsRepositoryInterface):
 
     @classmethod
     def select_title(cls, title: str) -> GroupsEntity:
-        groups_entity = GroupsEntity(id="dalsj-dlad-dasad", title="TestGroup")
+        groups_entity =  GroupsEntity(id="dalsj-dlad-dasad", title="TestGroup")
         if groups_entity.title == title:
             return groups_entity
+        return None
+
+    @classmethod
+    def select_group_id(cls, group_id: str) -> GroupsEntity:
+        group_entity =  GroupsEntity(id="dalsj-dlad-dasad", title="TestGroup")
+        if group_entity.id == group_id:
+            return group_entity
         return None

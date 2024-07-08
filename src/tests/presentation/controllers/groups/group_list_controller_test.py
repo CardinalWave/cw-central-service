@@ -2,11 +2,13 @@ from src.presentation.controllers.groups.group_list_controller import GroupListC
 from src.presentation.http_types.http_response import HttpResponse
 from src.tests.data.mocks.groups.group_list import GroupListSpy
 
+
 class HttpRequestMock():
     def __init__(self) -> None:
-        self.body = { "token": "bola2014",
-	                "email": "vmarques@outlook.com",
-	                "username": "Lua"}
+        self.body = {"token": "bola2014",
+                     "email": "vmarques@outlook.com",
+                     "username": "Lua"}
+
 
 def test_handle():
     http_request_mock = HttpRequestMock()

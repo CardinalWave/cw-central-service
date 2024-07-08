@@ -8,16 +8,15 @@ class UserAuthenticatorSpy(UserAuthInterface):
 
     @classmethod
     def login(cls, login: Login) -> User:
-        instance = cls
-        return cls._request_auth(instance, login.email)
+        return cls.__request_auth(email=login.email)
 
     @classmethod
-    def register(cls, register: Register):
-        instance = cls
-        return cls._request_auth(instance, register.email)
+    def register(cls, register: Register) -> User:
+        return cls.__request_auth(email=register.email)
 
     @classmethod
     def logout(cls, user: User) -> None: pass
 
-    def _request_auth(self, email: str) -> None:
+    @staticmethod
+    def __request_auth(email: str) -> User:
         return User(token="39721cd4-6f50-46c5-9d2a-10f9159b09ee", username="Lua", email=email)

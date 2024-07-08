@@ -1,0 +1,362 @@
+@startuml
+class run.init {
+ app.run(host="0.0.0.0", port=5000)
+}
+
+run -->main.server.app
+
+
+class main.server.app {
+  app.register_blueprint(user_route_bp)
+}
+
+class main.composers.users.user_login_composer {
+  auth = UserAuthenticator()
+  repository = UsersRepository()
+  use_case = UserLogin()
+  controller = UserLoginController()
+  return: controller.handle
+}
+
+main.composers.users.user_login_composer --> data.use_cases.users.user_login.UserLogin
+data.use_cases.users.user_login.UserLogin --> data.use_cases.users.user_authenticator.UserAuthenticator
+data.use_cases.users.user_login.UserLogin --> infra.db.repositories.users.users_repository.UsersRepository
+data.use_cases.users.user_login.UserLogin ----> presentation.controllers.users.user_login_controller.UserLoginController
+
+class main.composers.users.user_logout_composer {
+  auth = UserAuthenticator()
+  repository = UsersRepository()
+  use_case = UserLogout()
+  controller = UserLogoutController()
+  return: controller.handle
+}
+
+main.composers.users.user_logout_composer --> data.use_cases.users.user_logout.UserLogout
+data.use_cases.users.user_logout.UserLogout --> data.use_cases.users.user_authenticator.UserAuthenticator
+data.use_cases.users.user_logout.UserLogout --> infra.db.repositories.users.users_repository.UsersRepository
+data.use_cases.users.user_logout.UserLogout ----> presentation.controllers.users.user_logout_controller.UserLogoutController
+
+
+class data.use_cases.users.user_authenticator.UserAuthenticator {
+  +login(cls, login: Login): User
+  +register(cls, register: Register): User
+  -__request_auth(params: any, url, action): User
+}
+
+
+interface domain.use_cases.users.user_authenticator.UserAuthenticatorInterface {
+  +login(self, login: Login): User
+  +register(self, register: Register): User
+}
+
+domain.use_cases.users.user_authenticator.UserAuthenticatorInterface <|-- data.use_cases.users.user_authenticator.UserAuthenticator
+
+class presentation.controllers.users.user_login_controller.UserLoginController {
+  +__init__(use_case: UserLoginInterface)
+  +handle(http_request: HttpRequest):HttpResponse
+}
+
+class presentation.controllers.users.user_logout_controller.UserLogoutController {
+  +__init__(use_case: UserLoginInterface)
+  +handle(http_request: HttpRequest):HttpResponse
+}
+
+class main.composers.users.user_register_composer{
+  auth = UserAuthenticator()
+  repository = UsersRepository()
+  use_case = UserRegister()
+  controller = UserRegisterController()
+  return: controller.handle
+}
+
+
+class presentation.controllers.users.user_register_controller.UserRegisterController {
+  +__init__(use_case: UserRegisterInterface)
+  +handle(http_request: HttpRequest):HttpResponse
+}
+
+main.composers.users.user_register_composer --> data.use_cases.users.user_register.UserRegister
+data.use_cases.users.user_register.UserRegister --> data.use_cases.users.user_authenticator.UserAuthenticator
+data.use_cases.users.user_register.UserRegister ---> presentation.controllers.users.user_register_controller.UserRegisterController
+
+class main.adapters.request_adapter{
+  return: http_response
+}
+
+interface presentation.interface.controller_interface {
+  +handle(http_request: HttpRequest): HttpResponse
+}
+
+presentation.interface.controller_interface <|-- presentation.controllers.users.user_login_controller.UserLoginController
+presentation.interface.controller_interface <|-- presentation.controllers.users.user_logout_controller.UserLogoutController
+presentation.interface.controller_interface <|-- presentation.controllers.users.user_register_controller.UserRegisterController
+
+
+class data.use_cases.users.user_login.UserLogin {
+  +__init__(users_repository: UsersRepositoryInterface, user_authenticator: UserAuthenticatorInterface)
+  +login(self, login: Login): Dict
+  -__validate_email(email: str)
+  -__validate_password(password: str)
+  -__search_user(self, login: Login)
+  -__authentication(self, login: Login): User
+  -__format_response(user: User): Dict
+}
+
+interface domain.use_cases.users.user_login.UserLoginInterface {
+  +login(self, login: Login): User
+}
+
+domain.use_cases.users.user_login.UserLoginInterface <|-- data.use_cases.users.user_login.UserLogin
+
+class data.use_cases.users.user_logout.UserLogout {
+  +__init__(users_repository: UsersRepositoryInterface, user_authenticator: UserAuthenticatorInterface)
+  +logout(self, user: User): None
+  -__authentication(self, user: User): None
+  -__logout_repo(self, user: User): None
+}
+
+interface domain.use_cases.users.user_logout.UserLogoutInterface {
+  +logout(self, user: User): None
+}
+
+domain.use_cases.users.user_logout.UserLogoutInterface <|-- data.use_cases.users.user_logout.UserLogout
+
+class data.use_cases.users.user_register.UserRegister {
+  +__init__(user_authenticator: UserAuthenticatorInterface)
+  +register(self, register: Register): Dict
+  -__validate_username(username: str)
+  -__validate_email(email: str)
+  -__validate_password(password: str)
+  -__authentication(self, login: Login): User
+  -__format_response(user: User): Dict
+}
+
+
+interface domain.use_cases.users.user_register.UserRegisterInterface {
+  +register(self, register: Register): Dict
+}
+
+domain.use_cases.users.user_register.UserRegisterInterface <|-- data.use_cases.users.user_register.UserRegister
+
+
+class infra.db.repositories.users.users_repository.UsersRepository {
+  +__init__(users_repository: UsersRepositoryInterface)
+  +insert_user(token: str, email: str, username: str): None
+  +select_username(username: str): UsersEntity
+  +select_email(email: str): UsersEntity
+
+}
+
+interface infra.db.interface.users.users_repository.UsersRepositoryInterface{
+  +insert_user(token: str, email: str, username: str): None
+  +select_username(username: str): UsersEntity
+  +select_email(email: str): UsersEntity
+}
+
+infra.db.interface.users.users_repository.UsersRepositoryInterface <|-- infra.db.repositories.users.users_repository.UsersRepository
+
+class main.composers.groups.group_join_composer {
+  group_repository = GroupsRepository()
+  user_group = user_group_composer()
+  use_case = GroupJoin()
+  controller = GroupJoinController()
+}
+
+main.composers.groups.group_join_composer ---> data.use_cases.groups.group_join.GroupJoin
+data.use_cases.groups.group_join.GroupJoin ---> main.composers.relations.user_group_composer
+data.use_cases.groups.group_join.GroupJoin ---> infra.db.repositories.groups.group_repository.GroupsRepository
+data.use_cases.groups.group_join.GroupJoin ----> presentation.controllers.groups.group_join_controller.GroupJoinController
+
+class main.composers.groups.group_list_composer {
+  user_group = user_group_composer()
+  use_case = GroupList(user_group)
+  controller = GroupListController(use_case)
+}
+
+main.composers.groups.group_list_composer ---> data.use_cases.groups.group_list.GroupList
+data.use_cases.groups.group_list.GroupList ---> main.composers.relations.user_group_composer
+data.use_cases.groups.group_list.GroupList ----> presentation.controllers.groups.group_list_controller.GroupListController
+
+class main.composers.groups.group_create_composer {
+  repository = GroupsRepository()
+    use_case = GroupCreate(repository)
+    controller = GroupCreateController(use_case)
+
+}
+
+main.composers.groups.group_create_composer ---> data.use_cases.groups.group_create.GroupCreate
+data.use_cases.groups.group_create.GroupCreate ---> infra.db.repositories.groups.group_repository.GroupsRepository
+data.use_cases.groups.group_create.GroupCreate ----> presentation.controllers.groups.group_create.GroupCreateController
+
+class data.use_cases.groups.group_join.GroupJoin {
+  +join(self, user: User, group: Group): UsersGroups
+  +join_global(self, user: User): UsersGroups
+  -__search_group(self, title: str): Group
+  -__search_member(self, email: str, title: str): None
+  -__register_member(self, user: User, group: Group): UsersGroups
+}
+
+interface domain.use_cases.groups.group_join.GroupJoinInterface {
+  +join(self, user: User, group: Group): UsersGroups
+  +join_global(self, user: User): UsersGroups
+}
+
+domain.use_cases.groups.group_join.GroupJoinInterface <|-- data.use_cases.groups.group_join.GroupJoin
+
+class data.use_cases.groups.group_list.GroupList {
+    +__init__(users_repository: UsersRepositoryInterface)
+    +join(self, user: User): List[Group]
+}
+
+interface domain.use_cases.groups.group_list.GroupList {
+    +join(self, user: User, ): List[Group]
+}
+
+domain.use_cases.groups.group_list.GroupList <|-- data.use_cases.groups.group_list.GroupList
+
+class data.use_cases.groups.group_create.GroupCreate {
+  +create(self, group: Group): Dict
+  -__validate_name(itle: str): Group
+  -__search_group(self, title: str): None
+  -__save_group(self, title: str) -> Group
+}
+
+interface domain.use_cases.groups.group_create.GroupCreate
+ {
+  +create(self, group: Group): Dict
+}
+
+domain.use_cases.groups.group_create.GroupCreate <|-- data.use_cases.groups.group_create.GroupCreate
+
+class infra.db.repositories.groups.group_repository.GroupsRepository {
+    +__init__(users_repository: UsersRepositoryInterface)
+    +add_group(cls, id: str, title: str): GroupsEntity
+    +select_title(cls, title: str): GroupsEntity
+}
+
+interface infra.db.interface.groups.groups_repository.GroupsRepositoryInterface{
+    +add_group(cls, id: str, title: str): GroupsEntity
+    +select_title(cls, title: str): GroupsEntity
+}
+
+infra.db.interface.groups.groups_repository.GroupsRepositoryInterface <|-- infra.db.repositories.groups.group_repository.GroupsRepository
+
+class main.composers.relations.user_group_composer {
+    secure_email = SecureEmail()
+    repository = UsersGroupsRepository()
+    use_case = UserGroup(repository, secure_email)
+}
+
+main.composers.groups.group_create_composer ---> data.use_cases.relations.user_group.UserGroup
+data.use_cases.relations.user_group.UserGroup ---> infra.db.repositories.relations.users_groups_repository.UsersGroupsRepository
+data.use_cases.relations.user_group.UserGroup ----> infra.security.implementations.secure_email.SecureEmail
+
+class data.use_cases.relations.user_group.UserGroup {
+    +join_user(self, user: User, group: Group): Dict
+    +select_user_relations(self, secure_email: str): List[Group]
+    +select_user_relations(self, secure_email: str): List[Group]
+    +select_group_relations(self, group_id: str): List[User]
+    +update_relation(self, user: User, group: Group): Dict
+}
+
+interface domain.use_cases.relations.user_group.UserGroup
+ {
+    +join_user(self, user: User, group: Group): Dict
+    +select_user_relations(self, secure_email: str): List[Group]
+    +select_user_relations(self, secure_email: str): List[Group]
+    +select_group_relations(self, group_id: str): List[User]
+    +update_relation(self, user: User, group: Group): Dict
+}
+
+domain.use_cases.relations.user_group.UserGroup <|-- data.use_cases.relations.user_group.UserGroup
+
+class infra.db.repositories.relations.users_groups_repository.UsersGroupsRepository {
+    +__init__(users_groups_repository: UsersGroupsRepositoryInterface)
+    +join_user(self, id: str, secure_email: str, group_title: str, group_id: str, updated_at: datetime): UsersGroupsEntity
+    +select_user_relations(self, secure_email: str): List[UsersGroupsEntity]
+    +select_group_relations(self, group_id: str) : List[UsersGroupsEntity]
+    +update_relation(self, secure_email: str, group_id: str, updated_at: datetime): UsersGroupsEntity
+
+}
+
+interface infra.db.interface.relations.users_groups_repository.UsersGroupsRepositoryInterface {
+    +join_user(self, id: str, secure_email: str, group_title: str, group_id: str, updated_at: datetime): UsersGroupsEntity
+    +select_user_relations(self, secure_email: str): List[UsersGroupsEntity]
+    +select_group_relations(self, group_id: str) : List[UsersGroupsEntity]
+    +update_relation(self, secure_email: str, group_id: str, updated_at: datetime): UsersGroupsEntity
+
+}
+
+infra.db.interface.relations.users_groups_repository.UsersGroupsRepositoryInterface <|-- infra.db.repositories.relations.users_groups_repository.UsersGroupsRepository
+
+class infra.security.implementations.secure_email.SecureEmail {
+    +__init__(secure_email: SecureEmailInterface)
+    +encrypt_email(self, email: str): str
+}
+
+interface infra.security.interface.secure_email.SecureEmailInterface {
+    +encrypt_email(self, email: str): str
+}
+
+infra.security.interface.secure_email.SecureEmailInterface <|-- infra.security.implementations.secure_email.SecureEmail
+
+class presentation.controllers.groups.group_create.GroupCreateController {
+  +__init__(use_case: UserRegisterInterface)
+  +handle(http_request: HttpRequest):HttpResponse
+}
+
+
+class presentation.controllers.groups.group_join_controller.GroupJoinController {
+  +__init__(use_case: UserRegisterInterface)
+  +handle(http_request: HttpRequest):HttpResponse
+}
+
+
+class presentation.controllers.groups.group_list_controller.GroupListController {
+  +__init__(use_case: UserRegisterInterface)
+  +handle(http_request: HttpRequest):HttpResponse
+}
+
+
+presentation.interface.controller_interface <|-- presentation.controllers.groups.group_create.GroupCreateController
+presentation.interface.controller_interface <|-- presentation.controllers.groups.group_join_controller.GroupJoinController
+presentation.interface.controller_interface <|-- presentation.controllers.groups.group_list_controller.GroupListController
+
+
+class domain.models.login.Login {
+  +__init__(self, email: str, password: str)
+  +to_dict(self): Dict
+  +to_json(self): json
+}
+
+class domain.models.register.Register {
+  +__init__(self, email: str, username: str, password: str)
+  +to_dict(self): Dict
+  +to_json(self): json
+}
+
+class domain.models.user.User {
+  +__init__(self, token: str, email: str, username: str)
+  +to_dict(self): Dict
+  +to_json(self): json
+}
+
+class domain.models.group.Group {
+    +__init__(self, group_id: str, title: str)
+    +to_dict(self): Dict
+    +to_json(self): json
+}
+
+main.server.app --> Flask
+
+main.server.app ---> main.routes
+
+main.routes. user_route_bp 
+
+main.routes ---> main.adapters
+
+main.routes ---> main.composers
+
+main.routes.user_route_bp ---> main.adapters
+
+@enduml

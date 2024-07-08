@@ -6,20 +6,22 @@ from src.domain.use_cases.users.user_authenticator import UserAuthenticator as U
 from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
+from src.domain.models.session import Session
+
 
 class UserLogin(UserLoginInterface):
     def __init__(self, users_repository: UsersRepositoryInterface,
-                user_authenticator: UserAuthInterface) -> None:
+                 user_authenticator: UserAuthInterface) -> None:
         self.__users_repository = users_repository
         self.__user_authenticator = user_authenticator
 
-    def login(self, login: Login) -> Dict:
+    def login(self, login: Login, session: Session) -> Dict:
         try:
             self.__validate_email(login.email)
             self.__validate_password(login.password)
             self.__search_user(login=login)
             auth = self.__authentication(login=login)
-            self.__save_login(user=auth)
+            self.__save_login(user=auth, session=session)
             response = self.__format_response(user=auth)
             return response
         except BadRequestError as e:
@@ -45,10 +47,12 @@ class UserLogin(UserLoginInterface):
     def __authentication(self, login: Login) -> User:
         return self.__user_authenticator.login(login)
 
-    def __save_login(self, user: User) -> None:
+    def __save_login(self, user: User, session: Session) -> None:
         self.__users_repository.insert_user(token=user.token,
                                             email=user.email,
-                                            username=user.username)
+                                            username=user.username,
+                                            device=session.device,
+                                            session_id=session.session_id)
 
     @staticmethod
     def __format_response(user: User) -> Dict:

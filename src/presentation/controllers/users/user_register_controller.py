@@ -4,6 +4,7 @@ from src.presentation.http_types.http_request import HttpRequest
 from src.presentation.http_types.http_response import HttpResponse
 from src.domain.models.register import Register
 
+
 class UserRegisterController(ControllerInterface):
 
     def __init__(self, use_case: UserRegisterInterface) -> None:
@@ -18,5 +19,5 @@ class UserRegisterController(ControllerInterface):
 
         return HttpResponse(
             status_code=200,
-            body={ "payload":response }
+            body={"payload": response}
         )

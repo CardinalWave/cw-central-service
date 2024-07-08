@@ -6,6 +6,7 @@ from src.domain.models.register import Register
 from src.domain.models.user import User
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
+
 class UserRegister(UserRegisterInterface):
 
     def __init__(self, user_authenticator: UserAuthInterface) -> None:
@@ -39,7 +40,7 @@ class UserRegister(UserRegisterInterface):
 
     @staticmethod
     def __validate_password(password: str) -> None:
-        if len(password) > 20:
+        if 8 > len(password) > 250:
             raise BadRequestError('Senha invalida')
 
     def __authentication(self, register: Register) -> User:

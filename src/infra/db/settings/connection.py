@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+
 class DBConnectionHandler:
     def __init__(self) -> None:
         self.__connection_string = "{}+{}://{}:{}@{}:{}/{}".format(
@@ -10,7 +11,7 @@ class DBConnectionHandler:
             'root',
             'localhost',
             '5432',
-            'cw_database'
+            'cw_central_db'
         )
 
         self.__engine = self.__create_database_engine()

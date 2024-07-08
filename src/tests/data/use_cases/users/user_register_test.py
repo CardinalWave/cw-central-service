@@ -16,6 +16,7 @@ def mock_user():
 
 def test_register(mock_register, mock_user):
     users_auth = UserAuthenticatorSpy()
+
     user_register = UserRegister(user_authenticator=users_auth)
     response = user_register.register(mock_register)
 

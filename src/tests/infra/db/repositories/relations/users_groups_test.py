@@ -13,6 +13,8 @@ connection = db_connection_handler.get_engine().connect()
 def test_join_user():
     mocked_id = str(uuid.uuid4())
     mocked_email = 'test@outlook.com'
+    mocked_user_token = 'user_token'
+    mocked_username = "TestName"
 
     mocked_group_id = str(uuid.uuid4())
     mocked_title = "TestTitleGroup"
@@ -23,6 +25,8 @@ def test_join_user():
     users_groups_repository = UsersGroupsRepository()
     users_groups_repository.join_user(id=mocked_id,
                                       secure_email=encrypt_email,
+                                      user_token=mocked_user_token,
+                                      username=mocked_username,
                                       group_title=mocked_title,
                                       group_id=mocked_group_id,
                                       updated_at=dt.datetime.now())
@@ -46,6 +50,8 @@ def test_join_user():
 def test_select_user_relations():
     mocked_id = str(uuid.uuid4())
     mocked_email = 'test@outlook.com'
+    mocked_user_token = 'user_token'
+    mocked_username = "TestGroup"
 
     mocked_group_id = str(uuid.uuid4())
     mocked_title = "TestTitleGroup"
@@ -54,9 +60,16 @@ def test_select_user_relations():
     secure_email = SecureEmail()
     encrypted_email = secure_email.encrypt_email(email=mocked_email)
 
-    connection.execute(text('''INSERT INTO users_groups (id, secure_email,
-    group_title, group_id, updated_at) VALUES ('{}', '{}', '{}', '{}', '{}')
-    '''.format(mocked_id, encrypted_email, mocked_title, mocked_group_id, str(mocked_updated_at))))
+    connection.execute(text('''INSERT INTO users_groups (id, secure_email, user_token, username,
+    group_title, group_id, updated_at) VALUES ('{}', '{}', '{}','{}', '{}', '{}', '{}')
+    '''.format(mocked_id,
+               encrypted_email,
+               mocked_user_token,
+               mocked_username,
+               mocked_title,
+               mocked_group_id,
+               str(mocked_updated_at))))
+
     connection.commit()
 
     users_groups_repository = UsersGroupsRepository()
@@ -76,6 +89,8 @@ def test_select_user_relations():
 def test_select_group_relations():
     mocked_id = str(uuid.uuid4())
     mocked_email = 'test@outlook.com'
+    mocked_user_token = 'user_token'
+    mocked_username = "TestGroup"
 
     mocked_group_id = str(uuid.uuid4())
     mocked_title = "TestTitleGroup"
@@ -84,9 +99,16 @@ def test_select_group_relations():
     secure_email = SecureEmail()
     encrypted_email = secure_email.encrypt_email(email=mocked_email)
 
-    connection.execute(text('''INSERT INTO users_groups (id, secure_email,
-    group_title, group_id, updated_at) VALUES ('{}', '{}', '{}', '{}', '{}')
-    '''.format(mocked_id, encrypted_email, mocked_title, mocked_group_id, str(mocked_updated_at))))
+    connection.execute(text('''INSERT INTO users_groups (id, secure_email, user_token, username,
+    group_title, group_id, updated_at) VALUES ('{}', '{}', '{}','{}', '{}', '{}', '{}')
+    '''.format(mocked_id,
+               encrypted_email,
+               mocked_user_token,
+               mocked_username,
+               mocked_title,
+               mocked_group_id,
+               str(mocked_updated_at))))
+
     connection.commit()
 
     users_groups_repository = UsersGroupsRepository()
@@ -106,17 +128,26 @@ def test_select_group_relations():
 def test_update_relation():
     mocked_id = "007b32fc-dd80-4147-add7-17213328bc2a"
     mocked_email = 'test@outlook.com'
+    mocked_user_token = 'user_token'
+    mocked_username = "TestGroup"
 
-    mocked_group_id = "a17b32fc-dd80-4147-add7-17213328bc2a"
+    mocked_group_id = str(uuid.uuid4())
     mocked_title = "TestTitleGroup"
-    mocked_updated_at = dt.datetime(2024, 5, 30, 17, 56, 15, 766331)
+    mocked_updated_at = dt.datetime.now()
 
     secure_email = SecureEmail()
     encrypted_email = secure_email.encrypt_email(email=mocked_email)
 
-    connection.execute(text('''INSERT INTO users_groups (id, secure_email,
-    group_title, group_id, updated_at) VALUES ('{}', '{}', '{}', '{}', '{}')
-    '''.format(mocked_id, encrypted_email, mocked_title, mocked_group_id, str(mocked_updated_at))))
+    connection.execute(text('''INSERT INTO users_groups (id, secure_email, user_token, username,
+    group_title, group_id, updated_at) VALUES ('{}', '{}', '{}','{}', '{}', '{}', '{}')
+    '''.format(mocked_id,
+               encrypted_email,
+               mocked_user_token,
+               mocked_username,
+               mocked_title,
+               mocked_group_id,
+               str(mocked_updated_at))))
+
     connection.commit()
 
     mocked_updated_now = dt.datetime(2024, 6, 30, 17, 56, 15, 766331)

@@ -6,13 +6,14 @@ from src.tests.data.mocks.users.user_authenticator import UserAuthenticatorSpy
 from src.tests.infra.mocks.users_repository import UsersRepositorySpy
 from src.data.use_cases.users.user_logout import UserLogout
 
+
 @pytest.fixture
 def mock_user():
     return User(token="39721cd4-6f50-46c5-9d2a-10f9159b09ee",
                 username='Lua', email='lua@outlook.com')
 
-def test_logout(mock_user):
 
+def test_logout(mock_user):
     users_repo = UsersRepositorySpy()
     users_repo.remove_user = MagicMock()
 

@@ -4,6 +4,7 @@ from src.presentation.interfaces.controller_interface import ControllerInterface
 from src.domain.models.user import User
 from src.domain.use_cases.users.user_logout import UserLogout as UserLogoutInterface
 
+
 class UserLogoutController(ControllerInterface):
 
     def __init__(self, use_case: UserLogoutInterface) -> None:
@@ -18,5 +19,5 @@ class UserLogoutController(ControllerInterface):
 
         return HttpResponse(
             status_code=200,
-            body={ "payload":response }
+            body={"payload": response}
         )

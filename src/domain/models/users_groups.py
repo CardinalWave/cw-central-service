@@ -1,9 +1,10 @@
 #pylint: disable=redefined-builtin, too-many-arguments
 import json
 
+
 class UsersGroups:
     def __init__(self, id: str,
-                 secure_email:str,
+                 secure_email: str,
                  group_title: str,
                  group_id: str,
                  updated_at: str) -> None:

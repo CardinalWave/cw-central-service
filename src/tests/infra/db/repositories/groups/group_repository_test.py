@@ -7,6 +7,7 @@ from src.infra.db.repositories.group.groups_repository import GroupsRepository
 db_connection_handler = DBConnectionHandler()
 connection = db_connection_handler.get_engine().connect()
 
+
 @pytest.mark.skip(reason="sensive test")
 def test_add_group():
     mocked_id = str(uuid.uuid4())
@@ -28,6 +29,7 @@ def test_add_group():
         DELETE FROM groups WHERE title = '{registry.title}';                      
     '''))
     connection.commit()
+
 
 @pytest.mark.skip(reason="sensive test")
 def test_select_title():

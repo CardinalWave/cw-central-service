@@ -1,10 +1,14 @@
 from src.presentation.controllers.users.user_login_controller import UserLoginController
 from src.tests.data.mocks.users.user_login import UserLoginSpy
 from src.presentation.http_types.http_response import HttpResponse
-
 class HttpRequestMock():
     def __init__(self) -> None:
-        self.body = { "email": "lua@outlook.com", "password": "lu@Pelud@" }
+        self.body = {
+                "session_id": "session_idkmadmadada",
+                "device": "esp8266_01",
+                "email": "test@outlook.com",
+                "password": "senhadasd"
+        }
 
 def test_handle():
     http_request_mock = HttpRequestMock()
