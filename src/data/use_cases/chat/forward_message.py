@@ -1,14 +1,57 @@
 import datetime
+import http.client
+import json
 from typing import Dict
-
 from src.domain.models.group import Group
 from src.domain.models.user import User
+from src.domain.models.message import Message
+from src.domain.models.session import Session
 from src.domain.use_cases.chat.forward_message import ForwardMessage as ForwardMessageInterface
+from src.data.erros.domain_errors import BadRequestError, InternalServerError
+
 
 class ForwardMessage(ForwardMessageInterface):
+    cw_message_service = ""
 
-    def join_group(self, user: User, group: Group, updated_at: datetime): pass
+    @classmethod
+    def send_message(cls, user: User, group: Group, session: Session, message: Dict, action: str):
+        updated_at = datetime.datetime.now()
+        payload = cls.__format_message(user=user,
+                                       group=group,
+                                       session=session,
+                                       send_time=updated_at,
+                                       action=action,
+                                       message=message)
+        # cls.__request_message(payload, cls.cw_message_service, action)
 
-    def send_message(self, user: User, group: Group, message: Dict): pass
+    @staticmethod
+    def __format_message(user: User, group: Group, session: Session, send_time: datetime, action, message: Dict):
+        try:
+            message = Message(group_id=group.group_id,
+                              username=user.username,
+                              session=session,
+                              send_time=send_time,
+                              payload=message)
+        except Exception as e:
+            raise BadRequestError(e) from e
 
-    def logout_group(self, user: User, group: Group, updated_at: datetime): pass
+    @staticmethod
+    def __request_message(params: any, url: str, action):
+        try:
+            headers = {
+                'Content-type': 'application/json'
+            }
+
+            conn = http.client.HTTPSConnection(url)
+            conn.sock.settimeout(10)
+            route = '/chat/' + action
+            conn.request("POST", route, params, headers)
+            response = conn.getresponse()
+            if response.status != 200:
+                raise ValueError("Request error")
+
+            data = response.read()
+            json_data = json.loads(data)
+            conn.close()
+        except Exception as e:
+            raise BadRequestError(e) from e
