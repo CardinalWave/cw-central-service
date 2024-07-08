@@ -1,9 +1,10 @@
+import datetime as dt
 from typing import Dict
 from src.domain.models.group import Group
 from src.domain.models.user import User
 from src.domain.models.session import Session
+from src.domain.models.message import Message
 from src.domain.use_cases.chat.chat_join import ChatJoin as ChatJoinInterface
-from src.domain.use_cases.relations.user_status import UserStatus as UserStatusInterface
 from src.domain.use_cases.chat.forward_message import ForwardMessage as ForwardMessageInterface
 from src.infra.db.interfaces.users_repository import UsersRepositoryInterface
 from src.infra.security.implementations.secure_email import SecureEmailInterface
@@ -18,52 +19,51 @@ class ChatJoin(ChatJoinInterface):
                  forward_message: ForwardMessageInterface,
                  user_repository: UsersRepositoryInterface,
                  secure_email: SecureEmailInterface,
-                 validate: ValidateInterface,
-                 user_status: UserStatusInterface):
+                 validate: ValidateInterface):
 
         self.__forward_message = forward_message
         self.__user_repository = user_repository
         self.__secure_email = secure_email
         self.__validate = validate
-        self.__user_status = user_status
 
     def join(self, group_id: str, token: str) -> Dict:
         try:
-            group = self.__search_group(group_id=group_id)
-            user, session = self.__search_user(user_token=token)
-            print(user.email)
-            user_status = self.__user_status.in_group(email=user.email, group=group)
-            print(user_status)
-            if user_status == UserStatusType.IN_GROUP:
-                self.__forward_message.send_message(user=user,
-                                                    group=group,
-                                                    session=session,
-                                                    action="join",
-                                                    message=group.to_dict())
-                print(group)
-                return group.to_dict()
+            user, session = self.__validate_user(user_token=token)
+            group = self.__validate_group(group_id=group_id)
+            message_payload = self.__send_message(user, group, session, message="")
+            return message_payload.to_dict()
         except BadRequestError as e:
             raise BadRequestError(str(e)) from e
         except Exception as e:
             raise InternalServerError(str(e)) from e
-
-    def __search_user(self, user_token: str) -> tuple:
+    def __validate_user(self, token: str) -> tuple:
         try:
-            user_entity = self.__user_repository.select_token(user_token)
-            if user_entity.token == user_token:
-                user = User(token=user_entity.token,
-                     email=user_entity.email,
-                     username=user_entity.username)
-                session = Session(session_id=user_entity.session_id,
-                        device=user_entity.device)
-                return user, session
+            user, session = self.__validate.user_session_token(token)
+            return user, session
         except NotFoundError as e:
-            raise NotFoundError("Usuario nao encontrado!") from e
+            raise NotFoundError(str(e)) from e
 
-
-    def __search_group(self, group_id) -> Group:
+    def __validate_group(self, group_id: str, email: str) -> Group:
         try:
             group = self.__validate.group_id(group_id=group_id)
-            return group
+            return Group
         except NotFoundError as e:
-            raise NotFoundError("Grupo nao encontrado") from e
+            raise NotFoundError(str(e)) from e
+
+
+    def __send_message(self, user: User, group: Group, session: Session, message: str) -> Message:
+        try:
+            current_time = dt.datetime.now()
+            message_payload = Message(group_id=group.group_id,
+                                      session=session,
+                                      username=user.username,
+                                      payload=message,
+                                      send_time=current_time)
+            self.__forward_message.send_message(user=user,
+                                                group=group,
+                                                session=session,
+                                                action="join",
+                                                message=message_payload.to_dict())
+            return message_payload
+        except BadRequestError as e:
+            raise BadRequestError(str(e)) from e
