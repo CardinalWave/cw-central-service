@@ -11,4 +11,4 @@ class UserStatus(ABC):
     def update_status(self, secure_email): pass
 
     @abstractmethod
-    def in_group(self, secure_email, group: Group) -> UserStatusType: pass
+    def in_group(self, email, group: Group) -> UserStatusType: pass

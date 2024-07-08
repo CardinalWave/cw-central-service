@@ -16,9 +16,9 @@ class UserStatus(UserStatusInterface):
     def update_status(self, user_status: UserStatusType):
         self.__current_status = user_status
 
-    def in_group(self, secure_email, group: Group) -> UserStatusType:
-        relations = self.__users_groups.select_user_relations(secure_email=secure_email)
+    def in_group(self, email: str, group: Group) -> UserStatusType:
+        relations = self.__users_groups.select_user_relations(email=email)
         for relation in relations:
             if relation.group_id == group.group_id or relation.title == group.title:
                 return UserStatusType.IN_GROUP
-            return UserStatusType.OUT_GROUP
+        return UserStatusType.OUT_GROUP
