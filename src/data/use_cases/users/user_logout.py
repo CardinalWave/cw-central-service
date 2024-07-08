@@ -21,8 +21,7 @@ class UserLogout(UserLogoutInterface):
             return "failed"
 
     def __authentication(self, user: User) -> None:
-        # self.__user_authenticator.logout(user)
-        pass
+        self.__user_authenticator.logout(user)
 
     def __logout_repo(self, user: User) -> str:
         return self.__users_repository.remove_user(user.token)

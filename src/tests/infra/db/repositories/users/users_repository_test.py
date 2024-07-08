@@ -16,7 +16,11 @@ def test_insert_user():
     mocked_session_id = "session_badlands321301231231231"
 
     users_repository = UsersRepository()
-    users_repository.insert_user(mocked_token, mocked_email, mocked_username, mocked_device, mocked_session_id)
+    users_repository.insert_user(mocked_token,
+                                 mocked_email,
+                                 mocked_username,
+                                 mocked_device,
+                                 mocked_session_id)
 
     sql = '''SELECT * FROM users
         WHERE email = '{}' 

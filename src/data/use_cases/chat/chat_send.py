@@ -7,7 +7,6 @@ from src.data.erros.domain_errors import NotFoundError, BadRequestError
 from src.domain.models.user import User
 from src.domain.models.group import Group
 from src.domain.models.session import Session
-from src.domain.enums.UserStatusType import UserStatusType
 from src.domain.use_cases.chat.forward_message import ForwardMessage as ForwardMessageInterface
 
 
@@ -33,7 +32,7 @@ class ChatSend(ChatSendInterface):
 
     def __validate_group(self, group_id: str, email: str) -> Group:
         try:
-            group = self.__validate.group_id(group_id)
+            group = self.__validate.group_id(group_id=group_id, email=email)
             return group
         except NotFoundError as e:
             raise NotFoundError(str(e)) from e
@@ -45,6 +44,7 @@ class ChatSend(ChatSendInterface):
                                       session=session,
                                       username=user.username,
                                       payload=message,
+                                      action="send",
                                       send_time=current_time)
             self.__forward_message.send_message(user=user,
                                                 group=group,

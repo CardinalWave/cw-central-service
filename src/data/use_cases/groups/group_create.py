@@ -1,6 +1,5 @@
 import uuid
 from typing import Dict
-from src.domain.models.group import Group
 from src.domain.use_cases.groups.group_create import GroupCreate as GroupCreateInterface
 from src.infra.db.interfaces.groups_repository import GroupsRepositoryInterface
 from src.data.erros.domain_errors import BadRequestError, InternalServerError

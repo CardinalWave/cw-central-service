@@ -7,7 +7,6 @@ from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
 from src.domain.models.session import Session
-from src.domain.enums.UserStatusType import UserStatusType
 
 
 class UserLogin(UserLoginInterface):

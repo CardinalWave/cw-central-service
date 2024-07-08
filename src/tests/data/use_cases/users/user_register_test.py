@@ -1,5 +1,4 @@
 #pylint: disable=redefined-outer-name
-from unittest.mock import MagicMock
 import pytest
 from src.domain.models.register import Register
 from src.domain.models.user import User
@@ -17,7 +16,6 @@ def mock_user():
 
 def test_register(mock_register, mock_user):
     users_auth = UserAuthenticatorSpy()
-    users_auth.register = MagicMock()
 
     user_register = UserRegister(user_authenticator=users_auth)
     response = user_register.register(mock_register)
@@ -25,5 +23,3 @@ def test_register(mock_register, mock_user):
     assert response.get("token") == mock_user.token
     assert response.get("email") == mock_user.email
     assert response.get("username") == mock_user.username
-
-    users_auth.register.assert_called_once_with(mock_user)

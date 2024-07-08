@@ -28,7 +28,6 @@ class UsersGroupsRepository(UsersGroupsRepositoryInterface):
                     group_id=group_id,
                     updated_at=updated_at
                 )
-                users_groups_entity = new_registry
                 database.session.add(new_registry)
                 database.session.commit()
             except Exception as e:

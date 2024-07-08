@@ -15,7 +15,7 @@ class UserGroupSpy(UserGroupInterface):
                            group_id=group.group_id,
                            updated_at=str(dt.datetime.now)).to_dict()
 
-    def select_user_relations(self, secure_email: str) -> list[Group]:
+    def select_user_relations(self, email: str) -> list[Group]:
         group_list = [
                     Group(group_id=str(uuid.uuid4()), title="Grupo1"),
                     Group(group_id=str(uuid.uuid4()), title="Grupo2"),

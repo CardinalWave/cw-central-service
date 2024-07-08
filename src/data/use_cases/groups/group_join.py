@@ -23,7 +23,7 @@ class GroupJoin(GroupJoinInterface):
         try:
             user = self.__validate.user_token(token)
             found_group = self.__search_group(group_id=group_id)
-            self.__search_member(user.email, found_group.title)
+            self.__search_member(email=user.email, title=found_group.title)
             user_group = self.__register_member(user, found_group)
             return user_group
         except BadRequestError as e:
@@ -37,7 +37,7 @@ class GroupJoin(GroupJoinInterface):
         return group
 
     def __search_member(self, email: str, title: str) -> None:
-        groups = self.__users_groups.select_user_relations(secure_email=email)
+        groups = self.__users_groups.select_user_relations(email=email)
 
         for group in groups:
             if group.title == title:

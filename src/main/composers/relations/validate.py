@@ -1,4 +1,3 @@
-from src.infra.security.implementations.secure_email import SecureEmail
 from src.infra.db.repositories.group.groups_repository import GroupsRepository
 from src.infra.db.repositories.users.users_repository import UsersRepository
 from src.data.use_cases.relations.validate import Validate

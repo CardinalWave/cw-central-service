@@ -6,7 +6,6 @@ from src.domain.models.login import Login
 from src.domain.models.register import Register
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
-import uuid
 
 class UserAuthenticator(UserAuthInterface):
     cw_auth_service = ""
@@ -45,22 +44,18 @@ class UserAuthenticator(UserAuthInterface):
                 'Content-type': 'application/json'
             }
 
-            # conn = http.client.HTTPConnection(url)
-            # route = "/user/"+action
-            # conn.request("POST", route, params, headers)
-            # response = conn.getresponse()
-            # if response.status != 200:
-            #     raise ValueError("Request error")
-            #
-            # data = response.read()
-            # json_data = json.loads(data)
-            # conn.close()
-            token = str(uuid.uuid4())
-            return User(token=token,
-                        username=params.email,
-                        email=params.email)
-            # return User(token=json_data['token'][0],
-            #             username=json_data['username'],
-            #             email=json_data['email'])
+            conn = http.client.HTTPConnection(url)
+            route = "/user/" + action
+            conn.request("POST", route, params, headers)
+            response = conn.getresponse()
+            if response.status != 200:
+                raise ValueError("Request error")
+
+            data = response.read()
+            json_data = json.loads(data)
+            conn.close()
+            return User(token=json_data['token'][0],
+                        username=json_data['username'],
+                        email=json_data['email'])
         except Exception as e:
             raise InternalServerError(str(e)) from e

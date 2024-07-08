@@ -40,12 +40,11 @@ class UserRegister(UserRegisterInterface):
 
     @staticmethod
     def __validate_password(password: str) -> None:
-        if len(password) < 8 and len(password) > 250:
+        if 8 > len(password) > 250:
             raise BadRequestError('Senha invalida')
 
     def __authentication(self, register: Register) -> User:
-        # return self.__user_authenticator.register(register)
-        return User(token="39721cd4-6f50-46c5-9d2a-10f9159b09ee", username=register.username, email=register.email)
+        return self.__user_authenticator.register(register)
 
     @staticmethod
     def __format_response(user: User) -> Dict:

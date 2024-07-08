@@ -1,3 +1,4 @@
+#pylint: disable=too-many-arguments
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.entities.users import Users as UsersEntity
 from src.infra.db.interfaces.users_repository import UsersRepositoryInterface
@@ -7,7 +8,12 @@ from src.data.erros.domain_errors import InternalServerError
 class UsersRepository(UsersRepositoryInterface):
 
     @classmethod
-    def insert_user(cls, token: str, email: str, username: str, device: str, session_id: str) -> None:
+    def insert_user(cls, token: str,
+                    email: str,
+                    username: str,
+                    device: str,
+                    session_id: str) -> None:
+
         with DBConnectionHandler() as database:
             try:
                 new_registry = UsersEntity(

@@ -1,8 +1,6 @@
+#pylint: disable=line-too-long
 import uuid
 import datetime as dt
-from typing import Dict
-from src.domain.models.group import Group
-from src.domain.models.user import User
 from src.domain.models.users_groups import UsersGroups
 from src.domain.use_cases.groups.group_join import GroupJoin as GroupJoinInterface
 

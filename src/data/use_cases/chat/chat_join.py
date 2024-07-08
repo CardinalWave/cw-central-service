@@ -6,9 +6,6 @@ from src.domain.models.session import Session
 from src.domain.models.message import Message
 from src.domain.use_cases.chat.chat_join import ChatJoin as ChatJoinInterface
 from src.domain.use_cases.chat.forward_message import ForwardMessage as ForwardMessageInterface
-from src.infra.db.interfaces.users_repository import UsersRepositoryInterface
-from src.infra.security.implementations.secure_email import SecureEmailInterface
-from src.domain.enums.UserStatusType import UserStatusType
 from src.domain.use_cases.relations.validate import Validate as ValidateInterface
 from src.data.erros.domain_errors import BadRequestError, InternalServerError, NotFoundError
 
@@ -17,19 +14,15 @@ class ChatJoin(ChatJoinInterface):
 
     def __init__(self,
                  forward_message: ForwardMessageInterface,
-                 user_repository: UsersRepositoryInterface,
-                 secure_email: SecureEmailInterface,
                  validate: ValidateInterface):
 
         self.__forward_message = forward_message
-        self.__user_repository = user_repository
-        self.__secure_email = secure_email
         self.__validate = validate
 
     def join(self, group_id: str, token: str) -> Dict:
         try:
-            user, session = self.__validate_user(user_token=token)
-            group = self.__validate_group(group_id=group_id)
+            user, session = self.__validate_user(token=token)
+            group = self.__validate_group(group_id=group_id, email=user.email)
             message_payload = self.__send_message(user, group, session, message="")
             return message_payload.to_dict()
         except BadRequestError as e:
@@ -45,8 +38,8 @@ class ChatJoin(ChatJoinInterface):
 
     def __validate_group(self, group_id: str, email: str) -> Group:
         try:
-            group = self.__validate.group_id(group_id=group_id)
-            return Group
+            group = self.__validate.group_id(group_id=group_id, email=email)
+            return group
         except NotFoundError as e:
             raise NotFoundError(str(e)) from e
 
@@ -58,6 +51,7 @@ class ChatJoin(ChatJoinInterface):
                                       session=session,
                                       username=user.username,
                                       payload=message,
+                                      action="join",
                                       send_time=current_time)
             self.__forward_message.send_message(user=user,
                                                 group=group,

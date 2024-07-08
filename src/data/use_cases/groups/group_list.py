@@ -13,7 +13,8 @@ class GroupList(GroupListInterface):
     def list(self, user: User) -> list[Group]:
         try:
             groups_entitys = self.__users_groups.select_user_relations(user.email)
-            groups = [Group(group_id=group.group_id, title=group.title).to_dict() for group in groups_entitys]
+            groups = [Group(group_id=group.group_id, title=group.title).to_dict()
+                      for group in groups_entitys]
             return groups
         except BadRequestError as e:
             raise BadRequestError(str(e)) from e
