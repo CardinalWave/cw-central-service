@@ -10,7 +10,11 @@ from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
 class GroupJoin(GroupJoinInterface):
 
-    def __init__(self, group_repository: GroupsRepositoryInterface, users_groups: UserGroupInterface, validate: ValidateInterface) -> None:
+    def __init__(self,
+                 group_repository: GroupsRepositoryInterface,
+                 users_groups: UserGroupInterface,
+                 validate: ValidateInterface) -> None:
+
         self.__group_repository = group_repository
         self.__users_groups = users_groups
         self.__validate = validate
@@ -33,7 +37,6 @@ class GroupJoin(GroupJoinInterface):
         return group
 
     def __search_member(self, email: str, title: str) -> None:
-        print(email, title)
         groups = self.__users_groups.select_user_relations(secure_email=email)
 
         for group in groups:

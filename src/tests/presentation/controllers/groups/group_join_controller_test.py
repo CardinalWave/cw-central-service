@@ -5,12 +5,8 @@ from src.tests.data.mocks.groups.group_join import GroupJoinSpy
 class HttpRequestMock():
     def __init__(self) -> None:
         self.body = {
-                    "token": "bola2014",
-                    "email": "vmarques@outlook.com",
-                    "username": "Lua",
-                    "group_title": "GLOBAL",
-                    "group_id": "cddf58c6-4dbf-4744-a5a9-549bba02c65b",
-                    "title": "GLOBAL"
+                    "token": "7a7d1fab-f717-46de-8743-50cadfef383b",
+                    "group_id": "3421584c-3248-487e-b351-b24b162b2f39"
                     }
 
 
