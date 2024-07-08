@@ -44,7 +44,6 @@ class UserGroup(UserGroupInteface):
 
     def select_user_relations(self, email: str) -> list[Group]:
         try:
-            print(email)
             groups = []
             encrypt_email = self.__secure_email.encrypt_email(email=email)
             users_group_entitys = self.__users_groups_repository.select_user_relations(secure_email=encrypt_email)

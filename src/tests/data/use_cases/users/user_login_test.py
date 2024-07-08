@@ -7,7 +7,6 @@ from src.domain.models.session import Session
 from src.tests.infra.mocks.users_repository import UsersRepositorySpy
 from src.tests.data.mocks.users.user_authenticator import UserAuthenticatorSpy
 from src.data.use_cases.users.user_login import UserLogin
-from src.tests.data.mocks.relations.user_status import UserStatusSpy
 
 @pytest.fixture
 def mock_login():
@@ -24,8 +23,7 @@ def mock_session():
 
 def test_login(mock_login, mock_user, mock_session):
     users_auth = UserAuthenticatorSpy()
-    user_status = UserStatusSpy()
-    user_login = UserLogin(UsersRepositorySpy(), users_auth, user_status)
+    user_login = UserLogin(UsersRepositorySpy(), users_auth)
     response = user_login.login(mock_login, mock_session)
 
     assert response.get("token") == mock_user.token

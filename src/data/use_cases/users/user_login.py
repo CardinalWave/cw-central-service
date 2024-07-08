@@ -8,16 +8,13 @@ from src.domain.models.login import Login
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
 from src.domain.models.session import Session
 from src.domain.enums.UserStatusType import UserStatusType
-from src.domain.use_cases.relations.user_status import UserStatus as UserStatusInterface
 
 
 class UserLogin(UserLoginInterface):
     def __init__(self, users_repository: UsersRepositoryInterface,
-                 user_authenticator: UserAuthInterface,
-                 user_status: UserStatusInterface) -> None:
+                 user_authenticator: UserAuthInterface) -> None:
         self.__users_repository = users_repository
         self.__user_authenticator = user_authenticator
-        self.__user_status = user_status
 
     def login(self, login: Login, session: Session) -> Dict:
         try:
@@ -27,7 +24,6 @@ class UserLogin(UserLoginInterface):
             auth = self.__authentication(login=login)
             self.__save_login(user=auth, session=session)
             response = self.__format_response(user=auth)
-            self.__user_status.update_status(UserStatusType.ONLINE)
             return response
         except BadRequestError as e:
             raise BadRequestError(str(e)) from e
