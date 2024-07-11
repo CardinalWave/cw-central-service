@@ -8,6 +8,8 @@ run -->main.server.app
 
 class main.server.app {
   app.register_blueprint(user_route_bp)
+  app.register_blueprint(chat_route_bp)
+  app.register_blueprint(group_route_bp)
 }
 
 class main.composers.users.user_login_composer {
@@ -141,16 +143,22 @@ domain.use_cases.users.user_register.UserRegisterInterface <|-- data.use_cases.u
 
 class infra.db.repositories.users.users_repository.UsersRepository {
   +__init__(users_repository: UsersRepositoryInterface)
-  +insert_user(token: str, email: str, username: str): None
+  +insert_user(token: str, email: str, username: str, device: str, session_id: str): None
   +select_username(username: str): UsersEntity
   +select_email(email: str): UsersEntity
+  +select_device(device: str): list[UsersEntity]
+  +select_token(token: str): UsersEntity
+  +remove_user(token: str): str
 
 }
 
 interface infra.db.interface.users.users_repository.UsersRepositoryInterface{
-  +insert_user(token: str, email: str, username: str): None
+  +insert_user(token: str, email: str, username: str, device: str, session_id: str): None
   +select_username(username: str): UsersEntity
   +select_email(email: str): UsersEntity
+  +select_device(device: str): list[UsersEntity]
+  +select_token(token: str): UsersEntity
+  +remove_user(token: str): str
 }
 
 infra.db.interface.users.users_repository.UsersRepositoryInterface <|-- infra.db.repositories.users.users_repository.UsersRepository
@@ -164,8 +172,10 @@ class main.composers.groups.group_join_composer {
 
 main.composers.groups.group_join_composer ---> data.use_cases.groups.group_join.GroupJoin
 data.use_cases.groups.group_join.GroupJoin ---> main.composers.relations.user_group_composer
+data.use_cases.groups.group_join.GroupJoin ---> main.composers.relations.validate
 data.use_cases.groups.group_join.GroupJoin ---> infra.db.repositories.groups.group_repository.GroupsRepository
 data.use_cases.groups.group_join.GroupJoin ----> presentation.controllers.groups.group_join_controller.GroupJoinController
+
 
 class main.composers.groups.group_list_composer {
   user_group = user_group_composer()
@@ -205,11 +215,11 @@ domain.use_cases.groups.group_join.GroupJoinInterface <|-- data.use_cases.groups
 
 class data.use_cases.groups.group_list.GroupList {
     +__init__(users_repository: UsersRepositoryInterface)
-    +join(self, user: User): List[Group]
+    +list(self, user: User): List[Group]
 }
 
 interface domain.use_cases.groups.group_list.GroupList {
-    +join(self, user: User, ): List[Group]
+    +list(self, user: User, ): List[Group]
 }
 
 domain.use_cases.groups.group_list.GroupList <|-- data.use_cases.groups.group_list.GroupList
@@ -237,6 +247,7 @@ class infra.db.repositories.groups.group_repository.GroupsRepository {
 interface infra.db.interface.groups.groups_repository.GroupsRepositoryInterface{
     +add_group(cls, id: str, title: str): GroupsEntity
     +select_title(cls, title: str): GroupsEntity
+    +select_group_id(cls, group_id: str): GroupsEntity
 }
 
 infra.db.interface.groups.groups_repository.GroupsRepositoryInterface <|-- infra.db.repositories.groups.group_repository.GroupsRepository
@@ -266,7 +277,7 @@ interface domain.use_cases.relations.user_group.UserGroup
     +select_user_relations(self, secure_email: str): List[Group]
     +select_group_relations(self, group_id: str): List[User]
     +update_relation(self, user: User, group: Group): Dict
-}
+
 
 domain.use_cases.relations.user_group.UserGroup <|-- data.use_cases.relations.user_group.UserGroup
 
@@ -289,6 +300,61 @@ interface infra.db.interface.relations.users_groups_repository.UsersGroupsReposi
 
 infra.db.interface.relations.users_groups_repository.UsersGroupsRepositoryInterface <|-- infra.db.repositories.relations.users_groups_repository.UsersGroupsRepository
 
+class data.use_cases.chat.chat_join.ChatJoin {
+    +__init__(forward_message: ForwardMessage, validate: ValidateInterface)
+    +join(self, group_id: str, token: str): Dict
+    -__validate_user(self, token: str): tuple (user, session)
+    -__validate_group(self, group_id: str, email: str): Group
+    -__send_message(self, user: User, group: Group, session: Session, message: str) -> Message:
+}
+
+interface domain.use_cases.chat.chat_join.ChatJoin {
+    +join(self, group_id: str, token: str): Dict
+}
+
+domain.use_cases.chat.chat_join.ChatJoin <|-- data.use_cases.chat.chat_join.ChatJoin
+
+class main.composers.chat.chat_join_composer {
+    validate = validate_composer()
+    forward_message = ForwardMessage()
+    use_case = ChatJoin(forward_message=forward_message, validate=validate)
+    controller = ChatJoinController(use_case)
+    return controller.handle
+}
+
+main.composers.chat.chat_join_composer ---> data.use_cases.chat.chat_join.ChatJoin
+data.use_cases.chat.chat_join.ChatJoin ---> data.use_cases.chat.forward_message.ForwardMessage
+data.use_cases.chat.chat_join.ChatJoin ---> main.composers.relations.validate
+data.use_cases.chat.chat_join.ChatJoin----> presentation.controllers.chat.chat_join_controller.ChatJoinController
+
+class data.use_cases.chat.chat_send.ChatSend {
+    +__init__(forward_message: ForwardMessage, validate: ValidateInterface)
+    +send(self, token: str, group_id: str, message: str): Dict
+    -__validate_user(self, token: str): tuple (user, session)
+    -__validate_group(self, group_id: str, email: str): Group
+    -__send_message(self, user: User, group: Group, session: Session, message: str) -> Message:
+}
+
+interface domain.use_cases.chat.chat_send.ChatSend {
+    +send(self, token: str, group_id: str, message: str): Dict
+}
+
+domain.use_cases.chat.chat_send.ChatSend <|-- data.use_cases.chat.chat_send.ChatSend
+
+class main.composers.chat.chat_send_composer {
+    validate = validate_composer()
+    forward_message = ForwardMessage()
+    use_case = ChatSend(validate=validate, forward_message=forward_message)
+    controller = ChatSendController(use_case)
+    return controller.handle
+}
+
+main.composers.chat.chat_send_composer ---> data.use_cases.chat.chat_send.ChatSend
+data.use_cases.chat.chat_send.ChatSend ---> data.use_cases.chat.forward_message.ForwardMessage
+data.use_cases.chat.chat_send.ChatSend ---> main.composers.relations.validate
+data.use_cases.chat.chat_send.ChatSend----> presentation.controllers.chat.chat_send_controller.ChatSendController
+
+
 class infra.security.implementations.secure_email.SecureEmail {
     +__init__(secure_email: SecureEmailInterface)
     +encrypt_email(self, email: str): str
@@ -301,19 +367,19 @@ interface infra.security.interface.secure_email.SecureEmailInterface {
 infra.security.interface.secure_email.SecureEmailInterface <|-- infra.security.implementations.secure_email.SecureEmail
 
 class presentation.controllers.groups.group_create.GroupCreateController {
-  +__init__(use_case: UserRegisterInterface)
+  +__init__(use_case: GroupCreateInterface)
   +handle(http_request: HttpRequest):HttpResponse
 }
 
 
 class presentation.controllers.groups.group_join_controller.GroupJoinController {
-  +__init__(use_case: UserRegisterInterface)
+  +__init__(use_case: GroupJoinInterface)
   +handle(http_request: HttpRequest):HttpResponse
 }
 
 
 class presentation.controllers.groups.group_list_controller.GroupListController {
-  +__init__(use_case: UserRegisterInterface)
+  +__init__(use_case: GroupListInterface)
   +handle(http_request: HttpRequest):HttpResponse
 }
 
@@ -321,6 +387,64 @@ class presentation.controllers.groups.group_list_controller.GroupListController 
 presentation.interface.controller_interface <|-- presentation.controllers.groups.group_create.GroupCreateController
 presentation.interface.controller_interface <|-- presentation.controllers.groups.group_join_controller.GroupJoinController
 presentation.interface.controller_interface <|-- presentation.controllers.groups.group_list_controller.GroupListController
+
+
+class presentation.controllers.chat.chat_join_controller.ChatJoinController {
+  +__init__(use_case: ChatJoinInterface)
+  +handle(http_request: HttpRequest):HttpResponse
+}
+
+class presentation.controllers.chat.chat_send_controller.ChatSendController {
+  +__init__(use_case: ChatJoinInterface)
+  +handle(http_request: HttpRequest):HttpResponse
+}
+presentation.interface.controller_interface <|-- presentation.controllers.chat.chat_join_controller.ChatJoinController
+presentation.interface.controller_interface <|-- presentation.controllers.chat.chat_send_controller.ChatSendController
+
+class data.use_cases.chat.forward_message.ForwardMessage {
+    +__init__(forward_message: ForwardMessage, validate: ValidateInterface)
+    +send_message(cls, user: User, group: Group, session: Session, message: Dict, action: str):
+    -__format_message(user: User, group: Group, session: Session, send_time: datetime, action: str, message: Dict): Message
+    -__request_message(params: any, url: str, action)
+}
+
+interface domain.use_cases.chat.forward_message.ForwardMessage {
+    +send_message(cls, user: User, group: Group, session: Session, message: Dict, action: str)
+}
+
+domain.use_cases.chat.forward_message.ForwardMessage <|-- data.use_cases.chat.forward_message.ForwardMessage
+domain.use_cases.chat.chat_join.ChatJoin --> domain.use_cases.chat.forward_message.ForwardMessage
+domain.use_cases.chat.chat_send.ChatSend --> domain.use_cases.chat.forward_message.ForwardMessage
+
+class data.use_cases.relations.validate.Validate {
+    +__init__(user_repository: UsersRepositoryInterface, users_group_repository: UsersGroupsRepositoryInterface)
+    +user_email(self, email: str): User
+    +user_token(self, token: str): User
+    +user_session_token(self, token: str): tuple (User, Session)
+    +group_id(self, group_id: str, email: str): Group
+    +group_title(self, group_title: str, email: str): Group
+}
+
+interface domain.use_cases.relations.validate.Validate {
+    +user_email(self, email: str): User
+    +user_token(self, token: str): User
+    +user_session_token(self, token: str): tuple (User, Session)
+    +group_id(self, group_id: str, email: str): Group
+    +group_title(self, group_title: str, email: str): Group
+}
+
+domain.use_cases.relations.validate.Validate <|-- data.use_cases.relations.validate.Validate
+
+class main.composers.relations.validate {
+    users_rp = UsersRepository()
+    groups_rp = GroupsRepository()
+    use_case = Validate(users_rp, groups_rp)
+    return use_case
+}
+
+main.composers.relations.validate --> data.use_cases.relations.validate.Validate
+data.use_cases.relations.validate.Validate --> infra.db.repositories.users.users_repository.UsersRepository
+data.use_cases.relations.validate.Validate --> infra.db.repositories.groups.group_repository.GroupsRepository
 
 
 class domain.models.login.Login {
@@ -347,16 +471,49 @@ class domain.models.group.Group {
     +to_json(self): json
 }
 
+class domain.models.session.Session {
+    +__init__(self, session_id: str, device: str)
+    +to_dict(self): Dict
+    +to_json(self): json
+}
+
+class infra.db.entities.users.UsersEntity {
+    token = Column(String, primary_key=True)
+    email = Column(String, nullable=False)
+    username = Column(String, nullable=False)
+    device = Column(String, nullable=False)
+    session_id = Column(String, nullable=False)
+}
+
+class infra.db.entities.groups.GroupsEntity {
+    id = Column(String, primary_key=True)
+    title = Column(String, nullable=False)
+}
+
+class infra.db.entities.users_groups.UsersGroupsEntity {
+    id = Column(String, primary_key=True)
+    secure_email = Column(String, nullable=False)
+    user_token = Column(String, nullable=False)
+    username = Column(String, nullable=False)
+    group_title = Column(String, nullable=False)
+    group_id = Column(String, nullable=False)
+    updated_at = Column(String, nullable=False)
+}
+
 main.server.app --> Flask
 
 main.server.app ---> main.routes
 
-main.routes. user_route_bp 
+main.routes. user_route_bp
+main.routes. chat_route_bp
+main.routes. group_route_bp
 
 main.routes ---> main.adapters
 
 main.routes ---> main.composers
 
 main.routes.user_route_bp ---> main.adapters
+main.routes.chat_route_bp ---> main.adapters
+main.routes.group_route_bp ---> main.adapters
 
 @enduml
