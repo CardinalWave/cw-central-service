@@ -9,8 +9,4 @@ from src.domain.models.session import Session
 class ForwardMessage(ABC):
 
     @abstractmethod
-    def send_message(self, user: User,
-                     group: Group,
-                     session: Session,
-                     message: Dict,
-                     action: str): pass
+    def send_message(self, params: any, action: str): pass
