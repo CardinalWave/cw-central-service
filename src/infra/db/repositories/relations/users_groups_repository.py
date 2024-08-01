@@ -90,3 +90,20 @@ class UsersGroupsRepository(UsersGroupsRepositoryInterface):
             except Exception as e:
                 database.session.rollback()
                 raise InternalServerError(str(e)) from e
+
+    @classmethod
+    def remove_user(cls, user_token: str, group_id: str):
+        with DBConnectionHandler() as database:
+            try:
+                entity = (
+                    database.session
+                    .query(UsersGroupsEntity)
+                    .filter(UsersGroupsEntity.user_token == user_token)
+                    .filter(UsersGroupsEntity.group_id == group_id)
+                    .first()
+                )
+                database.session.delete(entity)
+                database.session.commit()
+            except Exception as e:
+                database.session.rollback()
+                raise InternalServerError(str(e)) from e

@@ -22,3 +22,6 @@ class UsersGroupsRepositoryInterface(ABC):
 
     @abstractmethod
     def update_relation(self, secure_email: str, group_id: str, updated_at: datetime) -> UsersGroupsEntity: pass
+
+    @abstractmethod
+    def remove_user(self, user_token: str, group_id: str): pass
