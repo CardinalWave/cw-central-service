@@ -1,11 +1,11 @@
-import json
+#pylint: disable=inconsistent-return-statements
 from src.domain.use_cases.groups.group_leave import GroupLeave as GroupLeaveInterface
 from src.infra.db.interfaces.groups_repository import GroupsRepositoryInterface
 from src.domain.use_cases.relations.user_group import UserGroup as UserGroupInterface
 from src.domain.use_cases.relations.validate import Validate as ValidateInterface
 from src.domain.models.group import Group
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
-from src.main.logs.logs import log_session, log_error
+from src.main.logs.logs_interface import LogInterface
 
 
 class GroupLeave(GroupLeaveInterface):
@@ -13,33 +13,35 @@ class GroupLeave(GroupLeaveInterface):
     def __init__(self,
                  group_repository: GroupsRepositoryInterface,
                  users_groups: UserGroupInterface,
-                 validate: ValidateInterface):
+                 validate: ValidateInterface,
+                 logger: LogInterface):
         self.__group_repository = group_repository
         self.__users_groups = users_groups
         self.__validate = validate
+        self.__logger = logger
 
     def leave(self, token: str, group_id: str):
         try:
-            log_session(action="group_leave", session=[token, group_id])
+            self.__logger.log_session(action="group_leave", session=[token, group_id])
             user = self.__validate.user_token(token)
             found_group = self.__search_group(group_id)
             self.__search_member(email=user.email, title=found_group.title)
             self.__remove_user(user.token, found_group.group_id)
         except BadRequestError as e:
-            log_error(error=e, message=str(e))
+            self.__logger.log_error(error=e, message=str(e))
             raise BadRequestError(str(e)) from e
         except Exception as e:
-            log_error(error=e, message=str(e))
+            self.__logger.log_error(error=e, message=str(e))
             raise InternalServerError(str(e)) from e
 
     def __remove_user(self, token: str, group_id: str):
         try:
             self.__users_groups.remove_user(user_token=token, group_id=group_id)
         except BadRequestError as e:
-            log_error(error=e, message=str(e))
+            self.__logger.log_error(error=e, message=str(e))
             raise BadRequestError(str(e)) from e
         except Exception as e:
-            log_error(error=e, message=str(e))
+            self.__logger.log_error(error=e, message=str(e))
             raise InternalServerError(str(e)) from e
 
     def __search_group(self, group_id: str) -> Group:
@@ -59,5 +61,6 @@ class GroupLeave(GroupLeaveInterface):
                 break
 
         if not group_found:
-            log_error(error=BadRequestError, message="Nenhum grupo com o título fornecido encontrado")
+            self.__logger.log_error(error=BadRequestError,
+                                    message="Nenhum grupo com otítulo fornecido encontrado")
             raise BadRequestError("Nenhum grupo com o título fornecido encontrado")

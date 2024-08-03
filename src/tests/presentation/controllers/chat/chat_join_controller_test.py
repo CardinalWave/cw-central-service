@@ -1,6 +1,7 @@
 from src.presentation.controllers.chat.chat_join import ChatJoinController
 from src.presentation.http_types.http_response import HttpResponse
 from src.tests.data.mocks.chat.chat_join import ChatJoinSpy
+from src.tests.main.mock.logs import LogSpy
 
 
 class HttpRequestMock():
@@ -12,8 +13,9 @@ class HttpRequestMock():
 
 def test_handle():
     http_request_mock = HttpRequestMock()
+    logger = LogSpy()
     use_case = ChatJoinSpy()
-    chat_join_controller = ChatJoinController(use_case)
+    chat_join_controller = ChatJoinController(use_case, logger)
 
     response = chat_join_controller.handle(http_request_mock)
 
