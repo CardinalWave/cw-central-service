@@ -12,10 +12,7 @@ class GroupListController(ControllerInterface):
 
     def handle(self, http_request: HttpRequest) -> HttpResponse:
         token = http_request.body.get("token")
-        email = http_request.body.get("email")
-        username = http_request.body.get("username")
-        user = User(token=token, email=email, username=username)
-        response = self.__use_case.list(user)
+        response = self.__use_case.list(token)
 
         return HttpResponse(
             status_code=200,

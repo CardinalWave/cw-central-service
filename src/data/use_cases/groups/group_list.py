@@ -3,15 +3,19 @@ from src.domain.models.group import Group
 from src.domain.use_cases.groups.group_list import GroupList as GroupListInterface
 from src.domain.use_cases.relations.user_group import UserGroup as UserGroupInterfaces
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
+from src.data.use_cases.relations.validate import ValidateInterface
 
 
 class GroupList(GroupListInterface):
 
-    def __init__(self, users_groups: UserGroupInterfaces) -> None:
+    def __init__(self, users_groups: UserGroupInterfaces,
+                 validate: ValidateInterface) -> None:
         self.__users_groups = users_groups
+        self.__validate = validate
 
-    def list(self, user: User) -> list[Group]:
+    def list(self, token: str) -> list[Group]:
         try:
+            user = self.__validate.user_token(token=token)
             groups_entitys = self.__users_groups.select_user_relations(user.email)
             groups = [Group(group_id=group.group_id, title=group.title).to_dict()
                       for group in groups_entitys]
