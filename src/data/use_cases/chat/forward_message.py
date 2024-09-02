@@ -10,7 +10,7 @@ class ForwardMessage(ForwardMessageInterface):
 
     def __init__(self):
         self.msg_service_ip = Config.CW_MESSAGE_SERVICE_IP
-        self.msg_service_port = Config.CW_MESSAGE_SERVICE_PORT
+        self.msg_service_port = int(Config.CW_MESSAGE_SERVICE_PORT)
         self.__logger = Log()
 
     def send_message(self, params: any, action: str):
@@ -22,7 +22,7 @@ class ForwardMessage(ForwardMessageInterface):
             headers = {
                 'Content-type': 'application/json'
             }
-            conn = http.client.HTTPConnection(host='192.168.15.69', port=5001)
+            conn = http.client.HTTPConnection(host=self.msg_service_ip, port=self.msg_service_port)
             conn.request("POST", action, params, headers)
             conn.sock.settimeout(10)
             response = conn.getresponse()
