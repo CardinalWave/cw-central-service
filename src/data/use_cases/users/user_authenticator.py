@@ -41,7 +41,6 @@ class UserAuthenticator(UserAuthInterface):
         except Exception as e:
             raise BadRequestError(e) from e
 
-
     @staticmethod
     def __request_auth(params: any, url, action) -> User:
         try:
