@@ -3,13 +3,14 @@ import http.client
 from src.domain.use_cases.chat.forward_message import ForwardMessage as ForwardMessageInterface
 from src.data.erros.domain_errors import BadRequestError
 from src.main.logs.logs import Log
+from src.config.config import Config
 
 
 class ForwardMessage(ForwardMessageInterface):
 
     def __init__(self):
-        self.msg_service_ip = "192.168.15.69"
-        self.msg_service_port = 5001
+        self.msg_service_ip = Config.CW_MESSAGE_SERVICE_IP
+        self.msg_service_port = Config.CW_MESSAGE_SERVICE_PORT
         self.__logger = Log()
 
     def send_message(self, params: any, action: str):
