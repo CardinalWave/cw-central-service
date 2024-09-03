@@ -18,8 +18,14 @@ class UserAuthenticator(UserAuthInterface):
     def login(cls, login: Login) -> User:
         try:
             url = cls.cw_auth_service
-            request = cls.__request_auth(params=login, url=url, action="login")
-            return request
+            # request = cls.__request_auth(params=login, url=url, action="login")
+            user = User(token=str(uuid.uuid1()),
+                        username=''.join(random.choice(string.ascii_letters) for _ in range(6)),
+                        email=''.join(random.choice(string.ascii_letters) for _ in range(6)) + '@gmail.com')
+            print(user.username)
+            print(user.token)
+            print(user.email)
+            return user
         except Exception as e:
             raise BadRequestError(e) from e
 
