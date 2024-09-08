@@ -21,8 +21,7 @@ class GroupList(GroupListInterface):
             user = self.__validate.user_token(token=token)
             groups_entitys = self.__users_groups.select_user_relations(user.email)
             if len(groups_entitys) <= 0:
-                self.__group_join.join(token=token, group_id="02637f27-fa8c-49df-85f0-547e64af0b62")
-                time.sleep(2)
+                self.__group_join.join(token=token, group_id="0")
                 groups_entitys = self.__users_groups.select_user_relations(user.email)
             groups = [Group(group_id=group.group_id, title=group.title).to_dict()
                       for group in groups_entitys]
