@@ -1,5 +1,5 @@
 # Use a imagem base do Python
-FROM python:3.11-alpine    
+FROM python:3.11-alpine
 
 # Define o diretório de trabalho dentro do contêiner
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Instala as propriedades necessarias
-RUN apk add --no-cache git build-base
+RUN apk add --no-cache git build-base libffi-dev
 
 # Instala as dependências do Python
 RUN pip install --no-cache-dir -r requirements.txt
