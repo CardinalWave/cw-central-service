@@ -1,17 +1,17 @@
 # Use a imagem base do Python
-FROM python:3.11-alpine
+FROM cardinal_wave-python-base-image
 
 # Define o diretório de trabalho dentro do contêiner
 WORKDIR /app
 
 # Copia o arquivo requirements.txt para o diretório de trabalho
-COPY requirements.txt .
+#COPY requirements.txt .
 
 # Instala as propriedades necessarias
-RUN apk add --no-cache git build-base libffi-dev
+#RUN apk add --no-cache git build-base libffi-dev
 
 # Instala as dependências do Python
-RUN pip install --no-cache-dir -r requirements.txt
+#RUN pip install --no-cache-dir -r requirements.txt
 
 # Copia todos os arquivos do diretório atual para o diretório de trabalho no contêiner
 COPY . .
