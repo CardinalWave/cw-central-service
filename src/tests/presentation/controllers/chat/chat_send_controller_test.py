@@ -1,6 +1,7 @@
 from src.presentation.controllers.chat.chat_send import ChatSendController
 from src.presentation.http_types.http_response import HttpResponse
 from src.tests.data.mocks.chat.chat_send import ChatSendSpy
+from src.tests.main.mock.logs import LogSpy
 
 
 class HttpRequestMock():
@@ -14,7 +15,8 @@ class HttpRequestMock():
 def test_handle():
     http_request_mock = HttpRequestMock()
     use_case = ChatSendSpy()
-    chat_join_controller = ChatSendController(use_case)
+    logger = LogSpy()
+    chat_join_controller = ChatSendController(use_case, logger)
 
     response = chat_join_controller.handle(http_request_mock)
 

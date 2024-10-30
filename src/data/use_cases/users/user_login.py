@@ -7,13 +7,16 @@ from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
 from src.domain.models.session import Session
+from src.main.logs.logs_interface import LogInterface
 
 
 class UserLogin(UserLoginInterface):
     def __init__(self, users_repository: UsersRepositoryInterface,
-                 user_authenticator: UserAuthInterface) -> None:
+                 user_authenticator: UserAuthInterface,
+                 logger: LogInterface) -> None:
         self.__users_repository = users_repository
         self.__user_authenticator = user_authenticator
+        self.__logger = logger
 
     def login(self, login: Login, session: Session) -> Dict:
         try:
@@ -23,6 +26,7 @@ class UserLogin(UserLoginInterface):
             auth = self.__authentication(login=login)
             self.__save_login(user=auth, session=session)
             response = self.__format_response(user=auth)
+            self.__logger.log_session(session=response, action="user_join")
             return response
         except BadRequestError as e:
             raise BadRequestError(str(e)) from e

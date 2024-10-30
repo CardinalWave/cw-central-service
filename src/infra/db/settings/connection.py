@@ -1,18 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from src.config.config import Config
 
 
 class DBConnectionHandler:
     def __init__(self) -> None:
-        self.__connection_string = "{}+{}://{}:{}@{}:{}/{}".format(
-            'postgresql',
-            'psycopg2',
-            'postgres',
-            'root',
-            'localhost',
-            '5432',
-            'cw_central_db'
-        )
+        self.__connection_string = Config.CW_CENTRAL_DB
 
         self.__engine = self.__create_database_engine()
         self.session = None

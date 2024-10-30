@@ -17,3 +17,6 @@ class UserGroup(ABC):
 
     @abstractmethod
     def update_relation(self, user: User, group: Group) -> Dict: pass
+
+    @abstractmethod
+    def remove_user(self, user_token: str, group_id: str): pass

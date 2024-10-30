@@ -5,12 +5,15 @@ from src.data.use_cases.users.user_authenticator import UserAuthenticator as Use
 from src.domain.models.register import Register
 from src.domain.models.user import User
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
+from src.main.logs.logs_interface import LogInterface
 
 
 class UserRegister(UserRegisterInterface):
 
-    def __init__(self, user_authenticator: UserAuthInterface) -> None:
+    def __init__(self, user_authenticator: UserAuthInterface,
+                 logger: LogInterface) -> None:
         self.__user_authenticator = user_authenticator
+        self.__logger = logger
 
     def register(self, register: Register) -> Dict:
         try:
@@ -19,6 +22,7 @@ class UserRegister(UserRegisterInterface):
             self.__validate_password(register.password)
             auth = self.__authentication(register=register)
             response = self.__format_response(user=auth)
+            self.__logger.log_session(session=response, action="user_register")
             return response
         except BadRequestError as e:
             raise BadRequestError(str(e)) from e
@@ -29,7 +33,6 @@ class UserRegister(UserRegisterInterface):
     def __validate_username(username: str) -> None:
         if not username.isalpha():
             raise BadRequestError('Nome invalido para o registro')
-
         if len(username) > 20:
             raise BadRequestError('Nome muito grande para o registro')
 

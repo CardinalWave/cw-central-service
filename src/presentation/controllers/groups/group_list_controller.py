@@ -2,7 +2,6 @@ from src.presentation.http_types.http_request import HttpRequest
 from src.presentation.http_types.http_response import HttpResponse
 from src.presentation.interfaces.controller_interface import ControllerInterface
 from src.domain.use_cases.groups.group_list import GroupList as GroupListInterface
-from src.domain.models.user import User
 
 
 class GroupListController(ControllerInterface):
@@ -12,12 +11,9 @@ class GroupListController(ControllerInterface):
 
     def handle(self, http_request: HttpRequest) -> HttpResponse:
         token = http_request.body.get("token")
-        email = http_request.body.get("email")
-        username = http_request.body.get("username")
-        user = User(token=token, email=email, username=username)
-        response = self.__use_case.list(user)
+        response = self.__use_case.list(token)
 
         return HttpResponse(
             status_code=200,
-            body={ "payload":response }
+            body={"payload": response}
         )

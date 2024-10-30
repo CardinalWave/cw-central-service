@@ -38,7 +38,6 @@ class GroupJoin(GroupJoinInterface):
 
     def __search_member(self, email: str, title: str) -> None:
         groups = self.__users_groups.select_user_relations(email=email)
-
         for group in groups:
             if group.title == title:
                 raise BadRequestError("Usuario ja relacionado ao grupo")

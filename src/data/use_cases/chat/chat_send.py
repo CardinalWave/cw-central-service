@@ -1,27 +1,29 @@
-import datetime as dt
-from typing import Dict
-from src.domain.models.message import Message
+#pylint: disable=inconsistent-return-statements
+import json
 from src.domain.use_cases.chat.chat_send import ChatSend as ChatSendInterface
 from src.domain.use_cases.relations.validate import Validate as ValidateInterface
 from src.data.erros.domain_errors import NotFoundError, BadRequestError
-from src.domain.models.user import User
 from src.domain.models.group import Group
-from src.domain.models.session import Session
 from src.domain.use_cases.chat.forward_message import ForwardMessage as ForwardMessageInterface
+from src.domain.use_cases.relations.user_group import UserGroup as UserGroupInterface
+from src.main.logs.logs_interface import LogInterface
 
 
 class ChatSend(ChatSendInterface):
 
     def __init__(self, validate: ValidateInterface,
-                 forward_message: ForwardMessageInterface):
+                 forward_message: ForwardMessageInterface,
+                 user_group: UserGroupInterface,
+                 logger: LogInterface):
         self.__validate = validate
         self.__forward_message = forward_message
+        self.__user_group = user_group
+        self.__logger = logger
 
-    def send(self, token: str, group_id: str, message: str) -> Dict:
+    def send(self, token: str, group_id: str, message: str):
         user, session = self.__validate_user(token=token)
-        group = self.__validate_group(group_id=group_id, email=user.email)
-        message_payload = self.__send_message(user, group, session, message)
-        return message_payload.to_dict()
+        self.__validate_group(group_id=group_id, email=user.email)
+        self.__send_message(session_id=session.session_id, message=message)
 
     def __validate_user(self, token: str) -> tuple:
         try:
@@ -32,26 +34,20 @@ class ChatSend(ChatSendInterface):
 
     def __validate_group(self, group_id: str, email: str) -> Group:
         try:
-            group = self.__validate.group_id(group_id=group_id, email=email)
-            return group
+            list_group = self.__user_group.select_user_relations(email)
+            for group in list_group:
+                if group.group_id == group_id:
+                    return group
         except NotFoundError as e:
             raise NotFoundError(str(e)) from e
 
-    def __send_message(self, user: User, group: Group, session: Session, message: str) -> Message:
+    def __send_message(self, session_id: str, message: str):
         try:
-            current_time = dt.datetime.now()
-            message_payload = Message(group_id=group.group_id,
-                                      session=session,
-                                      username=user.username,
-                                      payload=message,
-                                      action="send",
-                                      send_time=current_time)
-            self.__forward_message.send_message(user=user,
-                                                group=group,
-                                                session=session,
-                                                action="send",
-                                                message=message_payload.to_dict())
-
-            return message_payload
+            params = json.dumps({
+                "session_id": session_id,
+                "payload": message
+            })
+            self.__logger.log_session(session=params, action="chat_join")
+            self.__forward_message.send_message(params=params, action="/chat/send")
         except BadRequestError as e:
             raise BadRequestError(str(e)) from e

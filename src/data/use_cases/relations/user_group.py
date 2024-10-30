@@ -87,3 +87,11 @@ class UserGroup(UserGroupInteface):
             raise BadRequestError(str(e)) from e
         except Exception as e:
             raise InternalServerError(str(e)) from e
+
+    def remove_user(self, user_token: str, group_id: str):
+        try:
+            self.__users_groups_repository.remove_user(user_token=user_token, group_id=group_id)
+        except BadRequestError as e:
+            raise BadRequestError(str(e)) from e
+        except Exception as e:
+            raise InternalServerError(str(e)) from e
