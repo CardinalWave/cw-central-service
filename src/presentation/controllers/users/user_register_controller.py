@@ -17,7 +17,8 @@ class UserRegisterController(ControllerInterface):
         username = http_request.body.get('username')
         password = http_request.body.get('password')
         register = Register(email=email, username=username, password=password)
-        self.__logger.log_session(session=[email, username, "********"], action="user_register_controller")
+        self.__logger.log_session(session=[email, username, "********"],
+                                  action="user_register_controller")
         response = self.__use_case.register(register)
 
         return HttpResponse(

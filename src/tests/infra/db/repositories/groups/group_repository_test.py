@@ -4,12 +4,10 @@ from sqlalchemy import text
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.repositories.group.groups_repository import GroupsRepository
 
-db_connection_handler = DBConnectionHandler()
-connection = db_connection_handler.get_engine().connect()
-
-
 @pytest.mark.skip(reason="sensive test")
 def test_add_group():
+    connection = DBConnectionHandler().get_engine().connect()
+
     mocked_id = str(uuid.uuid4())
     mocked_title = "TestGroup"
 
@@ -33,6 +31,8 @@ def test_add_group():
 
 @pytest.mark.skip(reason="sensive test")
 def test_select_title():
+    connection = DBConnectionHandler().get_engine().connect()
+
     mocked_id = "550e8400-e29b-41d4-a716-446655440000"
     mocked_title = "TestGroup"
 

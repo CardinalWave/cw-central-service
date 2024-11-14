@@ -1,3 +1,4 @@
+#pylint: disable=inconsistent-return-statements
 import json
 from typing import Dict
 from src.domain.models.group import Group

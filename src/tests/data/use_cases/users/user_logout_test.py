@@ -5,6 +5,7 @@ from src.domain.models.user import User
 from src.tests.data.mocks.users.user_authenticator import UserAuthenticatorSpy
 from src.tests.infra.mocks.users_repository import UsersRepositorySpy
 from src.data.use_cases.users.user_logout import UserLogout
+from src.tests.main.mock.logs import LogSpy
 
 
 @pytest.fixture
@@ -19,8 +20,9 @@ def test_logout(mock_user):
 
     users_auth = UserAuthenticatorSpy()
     users_auth.logout = MagicMock()
+    logger = LogSpy()
 
-    user_logout = UserLogout(users_repo, users_auth)
+    user_logout = UserLogout(users_repo, users_auth, logger)
     user_logout.logout(mock_user)
 
     users_auth.logout.assert_called_once_with(mock_user)

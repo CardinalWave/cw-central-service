@@ -21,7 +21,8 @@ class UserLoginController(ControllerInterface):
         session_id = http_request.body.get("session_id")
         device = http_request.body.get("device")
         session = Session(session_id=session_id, device=device)
-        self.__logger.log_session(session=[session_id, device, email], action="user_join_controller")
+        self.__logger.log_session(session=[session_id, device, email],
+                                  action="user_join_controller")
         response = self.__use_case.login(login, session)
 
         return HttpResponse(

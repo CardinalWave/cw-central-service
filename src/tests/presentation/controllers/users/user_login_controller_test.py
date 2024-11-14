@@ -1,6 +1,9 @@
 from src.presentation.controllers.users.user_login_controller import UserLoginController
 from src.tests.data.mocks.users.user_login import UserLoginSpy
 from src.presentation.http_types.http_response import HttpResponse
+from src.tests.main.mock.logs import LogSpy
+
+
 class HttpRequestMock():
     def __init__(self) -> None:
         self.body = {
@@ -13,7 +16,8 @@ class HttpRequestMock():
 def test_handle():
     http_request_mock = HttpRequestMock()
     use_case = UserLoginSpy()
-    user_login_controller = UserLoginController(use_case)
+    logger_spy = LogSpy()
+    user_login_controller = UserLoginController(use_case, logger_spy)
 
     response = user_login_controller.handle(http_request_mock)
 

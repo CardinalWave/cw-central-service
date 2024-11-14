@@ -6,11 +6,11 @@ from src.infra.db.repositories.relations.users_groups_repository import UsersGro
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.security.implementations.secure_email import SecureEmail
 
-db_connection_handler = DBConnectionHandler()
-connection = db_connection_handler.get_engine().connect()
 
 @pytest.mark.skip(reason="sensive test")
 def test_join_user():
+    connection = DBConnectionHandler().get_engine().connect()
+
     mocked_id = str(uuid.uuid4())
     mocked_email = 'test@outlook.com'
     mocked_user_token = 'user_token'
@@ -48,6 +48,8 @@ def test_join_user():
 
 @pytest.mark.skip(reason="sensive test")
 def test_select_user_relations():
+    connection = DBConnectionHandler().get_engine().connect()
+
     mocked_id = str(uuid.uuid4())
     mocked_email = 'test@outlook.com'
     mocked_user_token = 'user_token'
@@ -87,6 +89,8 @@ def test_select_user_relations():
 
 @pytest.mark.skip(reason="sensive test")
 def test_select_group_relations():
+    connection = DBConnectionHandler().get_engine().connect()
+
     mocked_id = str(uuid.uuid4())
     mocked_email = 'test@outlook.com'
     mocked_user_token = 'user_token'
@@ -126,6 +130,8 @@ def test_select_group_relations():
 
 @pytest.mark.skip(reason="sensive test")
 def test_update_relation():
+    connection = DBConnectionHandler().get_engine().connect()
+
     mocked_id = "007b32fc-dd80-4147-add7-17213328bc2a"
     mocked_email = 'test@outlook.com'
     mocked_user_token = 'user_token'

@@ -1,4 +1,3 @@
-import time
 from src.domain.models.group import Group
 from src.domain.use_cases.groups.group_list import GroupList as GroupListInterface
 from src.domain.use_cases.relations.user_group import UserGroup as UserGroupInterfaces

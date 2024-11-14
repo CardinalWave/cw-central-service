@@ -1,12 +1,14 @@
 #pylint: disable=redefined-outer-name
 import uuid
 import pytest
+
 from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.domain.models.session import Session
 from src.tests.infra.mocks.users_repository import UsersRepositorySpy
 from src.tests.data.mocks.users.user_authenticator import UserAuthenticatorSpy
 from src.data.use_cases.users.user_login import UserLogin
+from src.tests.main.mock.logs import LogSpy
 
 
 @pytest.fixture
@@ -27,7 +29,9 @@ def mock_session():
 
 def test_login(mock_login, mock_user, mock_session):
     users_auth = UserAuthenticatorSpy()
-    user_login = UserLogin(UsersRepositorySpy(), users_auth)
+    logger = LogSpy()
+
+    user_login = UserLogin(UsersRepositorySpy(), users_auth, logger)
     response = user_login.login(mock_login, mock_session)
 
     assert response.get("token") == mock_user.token
@@ -39,7 +43,9 @@ def test_login_error_email(mock_login, mock_session):
     mock_login.email = 'email'
 
     users_auth = UserAuthenticatorSpy()
-    user_login = UserLogin(UsersRepositorySpy(), users_auth)
+    logger = LogSpy()
+
+    user_login = UserLogin(UsersRepositorySpy(), users_auth, logger)
 
     try:
         user_login.login(mock_login, mock_session)
@@ -52,7 +58,9 @@ def test_login_error_password(mock_login, mock_session):
     mock_login.password = "777777"
 
     users_auth = UserAuthenticatorSpy()
-    user_login = UserLogin(UsersRepositorySpy(), users_auth)
+    logger = LogSpy()
+
+    user_login = UserLogin(UsersRepositorySpy(), users_auth, logger)
 
     try:
         user_login.login(mock_login, mock_session)
@@ -65,7 +73,9 @@ def test_login_user_loged(mock_login, mock_session):
     mock_login.email = 'lua2@outlook.com'
 
     users_auth = UserAuthenticatorSpy()
-    user_login = UserLogin(UsersRepositorySpy(), users_auth)
+    logger = LogSpy()
+
+    user_login = UserLogin(UsersRepositorySpy(), users_auth, logger)
 
     try:
         user_login.login(mock_login, mock_session)

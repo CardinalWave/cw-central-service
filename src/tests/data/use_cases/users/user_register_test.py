@@ -4,6 +4,8 @@ from src.domain.models.register import Register
 from src.domain.models.user import User
 from src.tests.data.mocks.users.user_authenticator import UserAuthenticatorSpy
 from src.data.use_cases.users.user_register import UserRegister
+from src.tests.main.mock.logs import LogSpy
+
 
 @pytest.fixture
 def mock_register():
@@ -16,8 +18,9 @@ def mock_user():
 
 def test_register(mock_register, mock_user):
     users_auth = UserAuthenticatorSpy()
+    logger = LogSpy()
 
-    user_register = UserRegister(user_authenticator=users_auth)
+    user_register = UserRegister(user_authenticator=users_auth, logger=logger)
     response = user_register.register(mock_register)
 
     assert response.get("token") == mock_user.token

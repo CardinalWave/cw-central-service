@@ -1,3 +1,4 @@
+#pylint: disable=invalid-envvar-default
 import configparser
 import os
 

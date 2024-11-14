@@ -1,5 +1,4 @@
-import http.client
-import json
+#pylint: disable=unused-variable, line-too-long, unused-argument
 import random
 import string
 import uuid
