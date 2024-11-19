@@ -1,4 +1,4 @@
-#pylint: disable=trailing-comma-tuple, too-many-arguments
+#pylint: disable=trailing-comma-tuple, too-many-arguments,  too-many-positional-arguments
 
 class HttpRequest:
 

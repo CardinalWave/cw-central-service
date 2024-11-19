@@ -1,4 +1,4 @@
-#pylint: disable=redefined-builtin, too-many-arguments
+#pylint: disable=redefined-builtin, too-many-arguments,  too-many-positional-arguments
 import datetime
 from src.infra.db.entities.users_groups import UsersGroups as UsersGroupsEntity
 from src.infra.db.interfaces.users_groups_repository import UsersGroupsRepositoryInterface

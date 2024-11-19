@@ -1,4 +1,4 @@
-#pylint: disable=too-many-arguments
+#pylint: disable=too-many-arguments, too-many-positional-arguments
 from src.infra.db.entities.users import Users as UsersEntity
 from src.infra.db.interfaces.users_repository import UsersRepositoryInterface
 

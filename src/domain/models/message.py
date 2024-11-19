@@ -1,5 +1,4 @@
-#pylint: disable=trailing-comma-tuple
-#pylint: disable=too-many-arguments
+#pylint: disable=trailing-comma-tuple, too-many-positional-arguments, too-many-arguments
 import json
 import datetime
 from src.domain.models.session import Session

@@ -1,4 +1,4 @@
-#pylint: disable=redefined-builtin, too-many-arguments
+#pylint: disable=redefined-builtin, too-many-arguments, too-many-positional-arguments
 import json
 
 
