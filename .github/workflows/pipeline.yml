@@ -1,0 +1,35 @@
+name: Pipeline
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Install Python 3.11"
+        uses: actions/checkout@v3
+
+      - name: "Setup Python 3.11"
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11.2"
+
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: Install venv and Install requirements
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Pylint
+        run: |
+          source venv/bin/activate
+          pylint --rcfile=pylint --rcfile=.pylintrc src
+          pytest -s -v
+
+      - name: Run Pytest
+        run: |
+          source venv/bin/activate
+          pytest -s -v
