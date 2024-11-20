@@ -2,7 +2,7 @@
 import random
 import string
 import uuid
-
+import requests
 from src.domain.use_cases.users.user_authenticator import UserAuthenticator as UserAuthInterface
 from src.domain.models.user import User
 from src.domain.models.login import Login
@@ -11,60 +11,46 @@ from src.data.erros.domain_errors import BadRequestError, InternalServerError
 
 
 class UserAuthenticator(UserAuthInterface):
-    cw_auth_service = ""
+    cw_auth_service = "http://localhost:5010"
 
     @classmethod
     def login(cls, login: Login) -> User:
         try:
-            url = cls.cw_auth_service
-            # request = cls.__request_auth(params=login, url=url, action="login")
-            user = User(token=str(uuid.uuid1()),
-                        username=''.join(random.choice(string.ascii_letters) for _ in range(6)),
-                        email=''.join(random.choice(string.ascii_letters) for _ in range(6)) + '@gmail.com')
-            print(user.username)
-            print(user.token)
-            print(user.email)
-            return user
+            params = login.to_json()
+            return cls.__request_auth(params=params, url=cls.cw_auth_service, action="login")
         except Exception as e:
-            raise BadRequestError(e) from e
+            raise BadRequestError(f"Login failed: {e}") from e
 
     @classmethod
     def register(cls, register: Register) -> User:
         try:
-            url = cls.cw_auth_service
-            request = cls.__request_auth(params=register.to_json(), url=url, action="register")
-            return request
+            params = register.to_json()
+            return cls.__request_auth(params=params, url=cls.cw_auth_service, action="register")
         except Exception as e:
-            raise BadRequestError(e) from e
+            raise BadRequestError(f"Registration failed: {str(e)}") from e
 
     @classmethod
     def logout(cls, user: User) -> User:
         try:
-            url = cls.cw_auth_service
-            request = cls.__request_auth(params=user.to_json(), url=url, action="logout")
-            return request
+            params = {"token": user.token}
+            return cls.__request_auth(params=params, url=cls.cw_auth_service, action="logout")
         except Exception as e:
-            raise BadRequestError(e) from e
+            raise BadRequestError(f"Logout failed: {str(e)}") from e
 
     @staticmethod
-    def __request_auth(params: any, url, action) -> User:
+    def __request_auth(params: dict, url: str, action: str) -> User:
         try:
-            # headers = {
-            #     'Content-type': 'application/json'
-            # }
-            #
-            # conn = http.client.HTTPConnection(url)
-            # route = "/user/" + action
-            # conn.request("POST", route, params, headers)
-            # response = conn.getresponse()
-            # if response.status != 200:
-            #     raise ValueError("Request error")
-            #
-            # data = response.read()
-            # json_data = json.loads(data)
-            # conn.close()
-            return User(token=str(uuid.uuid1()),
-                        username=''.join(random.choice(string.ascii_letters) for _ in range(6)),
-                        email=''.join(random.choice(string.ascii_letters) for _ in range(6)) + '@gmail.com')
+            headers = {'Content-Type': 'application/json'}
+            response = requests.post(f"{url}/{action}", json=params, headers=headers)
+
+            if response.status_code != 200:
+                raise ValueError(f"Error: {response.json().get('error', 'Unknown error')}")
+
+            data = response.json()
+            return User(
+                token=data.get("token"),
+                username=data.get("username"),
+                email=data.get("email")
+            )
         except Exception as e:
-            raise InternalServerError(str(e)) from e
+            raise InternalServerError(f"Error in {action}: {str(e)}") from e
