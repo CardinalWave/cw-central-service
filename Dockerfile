@@ -17,15 +17,21 @@ WORKDIR /app
 COPY . .
 
 # Define variáveis de ambiente para o IP e porta do MQTT
-ENV CW_AUTH_SERVICE=0.0.0.0
 ENV CW_CENTRAL_SERVICE=cw-central-service
 ENV CW_CENTRAL_SERVICE_IP=0.0.0.0
 ENV CW_CENTRAL_SERVICE_PORT=5001
+
 ENV CW_MESSAGE_SERVICE_IP=cw-message-service
 ENV CW_MESSAGE_SERVICE_PORT=5003
 ENV CW_MESSAGE_SERVICE_URL=http:/cw-message-service:5003
+
+# ENV CW_AUTH_SERVICE=cw-auth-service
+# ENV CW_AUTH_SERVICE_IP=0.0.0.0
+# ENV CW_AUTH_SERVICE_PORT=5055
+
 ENV CW_LOG_TRACE_IP=cw-log-trace
 ENV CW_LOG_TRACE_PORT=5050
+
 ENV CW_CENTRAL_DB=postgresql+psycopg2://postgres:postgres@cw_central_db:5432/cw_central_db
 ENV CW_CENTRAL_DB_PASS=postgres
 ENV CW_CENTRAL_DB_USER=postgres

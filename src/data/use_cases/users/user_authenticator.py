@@ -1,56 +1,70 @@
 #pylint: disable=unused-variable, line-too-long, unused-argument
+import json
 import random
 import string
 import uuid
-import requests
+import http.client
 from src.domain.use_cases.users.user_authenticator import UserAuthenticator as UserAuthInterface
 from src.domain.models.user import User
 from src.domain.models.login import Login
 from src.domain.models.register import Register
 from src.data.erros.domain_errors import BadRequestError, InternalServerError
+from src.main.logs.logs import Log
 
 
 class UserAuthenticator(UserAuthInterface):
-    cw_auth_service = "http://localhost:5010"
+    def __init__(self):
+        self.__auth_service_ip = "cw-auth-service"
+        self.__auth_service_port = 5055
+        self.__logger = Log()
 
-    @classmethod
-    def login(cls, login: Login) -> User:
+    def login(self, login: Login) -> User:
         try:
             params = login.to_json()
-            return cls.__request_auth(params=params, url=cls.cw_auth_service, action="login")
+            return self.__request_auth(params=params, action="login")
+            # return User(username="Teste",
+            #             email="teste@email.com",
+            #             token="token")
         except Exception as e:
             raise BadRequestError(f"Login failed: {e}") from e
 
-    @classmethod
-    def register(cls, register: Register) -> User:
+    def register(self, register: Register) -> User:
         try:
             params = register.to_json()
-            return cls.__request_auth(params=params, url=cls.cw_auth_service, action="register")
+            return self.__request_auth(params=params, action="register")
         except Exception as e:
             raise BadRequestError(f"Registration failed: {str(e)}") from e
 
-    @classmethod
-    def logout(cls, user: User) -> User:
+    def logout(self, user: User) -> User:
         try:
             params = {"token": user.token}
-            return cls.__request_auth(params=params, url=cls.cw_auth_service, action="logout")
+            return self.__request_auth(params=params, action="logout")
+            # return User(username="Teste",
+            #             email="teste@email.com",
+            #             token="token")
         except Exception as e:
             raise BadRequestError(f"Logout failed: {str(e)}") from e
 
-    @staticmethod
-    def __request_auth(params: dict, url: str, action: str) -> User:
+    def __request_auth(self, params: dict, action: str) -> User:
         try:
+            self.__logger.log_session(session=params, action=f'request cw-auth-service '
+                                                             f'{self.__auth_service_ip}:'
+                                                             f'{self.__auth_service_port} - {action}')
             headers = {'Content-Type': 'application/json'}
-            response = requests.post(f"{url}/{action}", json=params, headers=headers)
-
-            if response.status_code != 200:
-                raise ValueError(f"Error: {response.json().get('error', 'Unknown error')}")
-
-            data = response.json()
+            conn = http.client.HTTPConnection(host=self.__auth_service_ip, port=self.__auth_service_port)
+            conn.request("POST", action, params, headers)
+            conn.sock.settimeout(10)
+            response = conn.getresponse()
+            if response.status != 200:
+                raise ValueError("Request error")
+            data = response.read()
+            json_data = json.loads(data)
+            self.__logger.log_session(session=params, action=f'return {json_data}')
+            conn.close()
             return User(
-                token=data.get("token"),
-                username=data.get("username"),
-                email=data.get("email")
+                token=json_data.get("token"),
+                username=json_data.get("username"),
+                email=json_data.get("email")
             )
         except Exception as e:
             raise InternalServerError(f"Error in {action}: {str(e)}") from e

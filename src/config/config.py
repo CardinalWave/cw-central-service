@@ -7,7 +7,9 @@ class Config:
     config = configparser.ConfigParser()
     config.read('src/config/config.ini')
 
-    CW_AUTH_SERVICE = config['CW_AUTH_SERVICE']['BaseURL']
+    # CW_AUTH_SERVICE = config['CW_AUTH_SERVICE']['BaseURL']
+    # CW_AUTH_SERVICE_IP = config['CW_AUTH_SERVICE']['IP']
+    # CW_AUTH_SERVICE_PORT = config['CW_AUTH_SERVICE']['PORT']
 
     CW_LOG_TRACE = config['CW_LOG_TRACE']['BaseURL']
     CW_LOG_TRACE_IP = config['CW_LOG_TRACE']['IP']
@@ -30,7 +32,9 @@ class Config:
     CW_CENTRAL_DB_NAME = config['CW_CENTRAL_DB']['NAME']
     # # From Dockerfile
 
-    CW_AUTH_SERVICE = os.getenv('CW_AUTH_SERVICE', CW_AUTH_SERVICE)
+    # CW_AUTH_SERVICE = os.getenv('CW_AUTH_SERVICE', CW_AUTH_SERVICE)
+    # CW_AUTH_SERVICE_IP = os.getenv('CW_AUTH_SERVICE_IP', CW_AUTH_SERVICE_IP)
+    # CW_AUTH_SERVICE_PORT = os.getenv('CW_AUTH_SERVICE_PORT', CW_AUTH_SERVICE_PORT)
 
     CW_LOG_TRACE = os.getenv('CW_LOG_TRACE', CW_LOG_TRACE)
     CW_LOG_TRACE_IP = os.getenv('CW_LOG_TRACE_IP', CW_LOG_TRACE_IP)
