@@ -16,15 +16,11 @@ class UserLogout(UserLogoutInterface):
 
     def logout(self, user: User) -> str:
         try:
-            self.__authentication(user=user)
             status = self.__logout_repo(user)
             self.__logger.log_session(session=user.token, action="user_logout")
             return status
         except BadRequestError:
             return "failed"
-
-    def __authentication(self, user: User) -> None:
-        self.__user_authenticator.logout(user)
 
     def __logout_repo(self, user: User) -> str:
         return self.__users_repository.remove_user(user.token)
